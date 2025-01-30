@@ -106,9 +106,6 @@
   transition: background 0.3s;
 }
 
-.info-btn:hover {
-  background: var(--button-hover);
-}
 
 /* Statistiques */
 .stats {

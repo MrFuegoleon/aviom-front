@@ -1,4 +1,5 @@
 import './Sidebar.css'
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -6,12 +7,13 @@ const Sidebar = () => {
       <h1 className="logo">Aviom</h1>
       <nav className="nav-menu">
         <ul>
-          <li> Informations Personnelles</li>
-          <li> Gérer mes Services</li>
-          <li> Gestion des Contacts</li>
-          <li> Commander un Service</li>
-          <li> Facturation & Avoirs</li>
-          <li> Support & Assistance</li>
+          <li><Link to="/">Accueil</Link></li>
+          <li><Link to="/services">Gérer mes Services</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
+          <li><Link to="/commande">Commander un Service</Link></li>
+          <li><Link to="/facturation">Facturation & Avoirs</Link></li>
+          <li><Link to="/informations">Informations personnelles</Link></li>
+          <li><Link to="/support">Support & Assistance</Link></li>
         </ul>
       </nav>
       <button className="subscribe-btn">Inscription Newsletter</button>
@@ -20,3 +22,4 @@ const Sidebar = () => {
 }
 
 export default Sidebar;
+
