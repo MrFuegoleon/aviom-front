@@ -1,68 +1,155 @@
+/* Couleurs Aviom */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --primary-color: #00447a;
+  --secondary-color: #0078d7;
+  --text-color: #ffffff;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --button-color: #0078d7;
+  --button-hover: #005fa3;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
+/* Conteneur principal */
+.app-container {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
+  background-color: var(--background-color);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-menu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background 0.3s;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.nav-menu li:hover {
+  background: var(--secondary-color);
+}
+
+/* Bouton Newsletter */
+.subscribe-btn {
+  background-color: var(--button-color);
+  color: var(--text-color);
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: auto;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.subscribe-btn:hover {
+  background-color: var(--button-hover);
+}
+
+/* Contenu principal */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.main-content h2 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+/* Commandes */
+.orders {
+  margin-top: 20px;
+}
+
+.order-card {
+  background: var(--card-background);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-btn {
+  background: var(--button-color);
+  color: var(--text-color);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.info-btn:hover {
+  background: var(--button-hover);
+}
+
+/* Statistiques */
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.stat-box {
+  background: var(--secondary-color);
+  color: var(--text-color);
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Services */
+.services-list {
+  background: var(--card-background);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--background-color);
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.service-name {
+  font-weight: bold;
+}
+
+.service-domain {
+  color: gray;
+}
+
+.renewal {
+  color: red;
+  font-weight: bold;
+}
+
+.other-services {
+  margin-top: 10px;
+  color: gray;
 }
