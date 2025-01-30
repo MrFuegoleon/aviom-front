@@ -1,18 +1,18 @@
 import './Sidebar.css'
 
-const Sidebar = () => {
+const Sidebar = ({ setPage }) => {
   return (
     <aside className="sidebar">
       <h1 className="logo">Aviom</h1>
       <nav className="nav-menu">
-        <ul>
-          <li> Informations Personnelles</li>
-          <li> Gérer mes Services</li>
-          <li> Gestion des Contacts</li>
-          <li> Commander un Service</li>
-          <li> Facturation & Avoirs</li>
-          <li> Support & Assistance</li>
-        </ul>
+      <ul>
+        <li onClick={() => setPage("dashboard")}>Informations Personnelles</li>
+        <li onClick={() => setPage("serveurs")}>Gérer mes Serveurs</li>
+        <li onClick={() => setPage("contacts")}>Gestion des Contacts</li>
+        <li onClick={() => setPage("services")}>Commander un Service</li>
+        <li onClick={() => setPage("facturation")}>Facturation & Avoirs</li>
+        <li onClick={() => setPage("support")}>Support & Assistance</li>
+      </ul>
       </nav>
       <button className="subscribe-btn">Inscription Newsletter</button>
     </aside>
