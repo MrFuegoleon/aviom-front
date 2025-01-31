@@ -1,0 +1,402 @@
+.serveur-container {
+  width: 90%;
+  margin: auto;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.serveur-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e8eefc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.create-button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.create-button:hover {
+  background-color: #005fa3;
+}
+
+.form-container {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  color: #00447a;
+}
+
+.configurations {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.config-classique, .config-vm, .config-flex {
+  width: 30%;
+}
+
+button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+.summary {
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #005fa3;
+}
+
+.serveur-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.serveur-table th, .serveur-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.status-green {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+}
+.back-button {
+  background-color: #f1f1f1;
+  color: #0078d7;
+  border: 1px solid #0078d7;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #0078d7;
+  color: white;
+}
+.serveur-container {
+  width: 90%;
+  margin: auto;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.serveur-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e8eefc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.create-button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.create-button:hover {
+  background-color: #005fa3;
+}
+
+.offer-buttons {
+  margin-top: 20px;
+}
+
+.offer-button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.offer-button:hover {
+  background-color: #005fa3;
+}
+
+.config-details {
+  margin-top: 30px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.config-table th, .config-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+button {
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.config-table th, .config-table td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+}
+
+.config-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.config-table td:first-child {
+  font-weight: bold;
+}
+
+.config-table .eco {
+  background-color: #9CFF8C;
+  color: green;
+}
+
+.config-table .duo {
+  background-color: #91C7FF;
+  color: blue;
+}
+
+.config-table .trio {
+  background-color: #FF5C5C;
+  color: red;
+}
+
+.config-table .pro {
+  background-color: #D3D3D3;
+  color: gray;
+}
+
+.config-table .checkmark {
+  color: green;
+}
+
+.config-table .crossmark {
+  color: red;
+}
+
+.config-table .checkmark::before {
+  content: "✔️";
+}
+
+.config-table .crossmark::before {
+  content: "❌";
+}
+
+.config-details {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.config-table td {
+  font-size: 14px;
+  color: #333;
+}
+
+.config-table td .checkmark, .config-table td .crossmark {
+  font-size: 18px;
+}
+/* Style pour les colonnes */
+.service-table th.eco {
+  background-color: #e0f8e0;
+  color: #008000;
+}
+
+.service-table th.duo {
+  background-color: #cce0ff;
+  color: #0000ff;
+}
+
+.service-table th.trio {
+  background-color: #f8d7da;
+  color: #ff0000;
+}
+
+.service-table th.pro {
+  background-color: #f5f5f5;
+  color: #808080;
+}
+
+/* Alignement des boutons */
+.discover-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.discover {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.eco { background-color: #008000; color: black; }
+.duo { background-color: #0000ff; color: black; }
+.trio { background-color: #ff0000;color: black; }
+.pro { background-color: #808080; color: black;}
+
+/* Résumé de la configuration */
+.config-summary {
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+.order-button {
+  padding: 10px;
+  background-color: #008000;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+/* Rendre le texte noir */
+.service-table, .service-table td, .service-table th {
+  color: black;
+}
+/* Conteneur pour les boutons Créer */
+.create-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Wrapper pour chaque bouton Créer */
+.create-btn-wrapper {
+  width: 23%;
+  text-align: center;
+}
+
+/* Style des boutons Créer */
+.create-btn {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+/* Couleurs spécifiques pour chaque plan */
+.create-btn.eco {
+  background-color: #00b100; /* Couleur ECO */
+  color: black;
+}
+
+.create-btn.duo {
+  background-color: #007bff; /* Couleur DUO */
+  color: black;
+}
+
+.create-btn.trio {
+  background-color: #ff0000; /* Couleur TRIO */
+  color: black;
+}
+
+.create-btn.pro {
+  background-color: #808080; /* Couleur PRO */
+  color: black;
+}
+
+/* Aligner les colonnes avec les boutons Créer */
+.service-table td {
+  text-align: center;
+  padding: 10px;
+}
+
+.service-table th {
+  text-align: center;
+  padding: 10px;
+}
+
+.config-table td, .config-table th {
+  padding: 10px;
+  text-align: center;
+}
