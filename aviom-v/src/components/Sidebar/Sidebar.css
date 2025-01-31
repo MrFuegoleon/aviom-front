@@ -1,8 +1,113 @@
+/* Style de base pour la sidebar */
 .sidebar {
-    width: 250px;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
+  width: 250px;
+  height: 100vh;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+/* Réduire la largeur de la sidebar sur les petits écrans */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
   }
+  .sidebar .logo,
+  .sidebar .nav-menu li a span,
+  .sidebar .subscribe-btn {
+    display: none;
+  }
+}
+
+/* Style du logo */
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #3498db;
+}
+
+/* Style du menu de navigation */
+.sidebar .nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .nav-menu li {
+  margin-bottom: 15px;
+}
+
+.sidebar .nav-menu li a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .nav-menu li a:hover {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.sidebar .nav-menu li a svg {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Style du bouton d'inscription */
+.sidebar .subscribe-btn {
+  margin-top: auto;
+  padding: 10px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .subscribe-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Animation pour les icônes */
+.sidebar .nav-menu li a svg {
+  transition: transform 0.3s ease;
+}
+
+.sidebar .nav-menu li a:hover svg {
+  transform: scale(1.2);
+}
+
+/* Ajouter une bordure au survol des liens */
+.sidebar .nav-menu li a {
+  position: relative;
+}
+
+.sidebar .nav-menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3498db;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.sidebar .nav-menu li a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
