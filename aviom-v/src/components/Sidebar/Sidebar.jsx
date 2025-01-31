@@ -8,9 +8,9 @@ const Sidebar = () => {
       <nav className="nav-menu">
         <ul>
           <li><Link to="/">Accueil</Link></li>
-          <li><Link to="/services">Gérer mes Services</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-          <li><Link to="/commande">Commander un Service</Link></li>
+          <li><Link to="/services">Gérer mes Serveurs</Link></li>
+          <li><Link to="/contact">Tableau de bord</Link></li>
+          <li><Link to="/commande">Gestion des noms de domaine</Link></li>
           <li><Link to="/facturation">Facturation & Avoirs</Link></li>
           <li><Link to="/informations">Informations personnelles</Link></li>
           <li><Link to="/support">Support & Assistance</Link></li>
