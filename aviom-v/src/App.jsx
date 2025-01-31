@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Home from "./pages/home";
 import Services from "./pages/services";
-import Contact from "./pages/contact";
+import  Dashboard from "./pages/dashboard";
 import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
 import Support from "./pages/support";
@@ -21,7 +21,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/facturation" element={<Facturation />} />
             <Route path="/commande" element={<Commande />} />
             <Route path="/informations" element={<Informations />} /> {/* Correction du chemin */}

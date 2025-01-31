@@ -9,7 +9,7 @@ const Sidebar = () => {
         <ul>
           <li><Link to="/">Accueil</Link></li>
           <li><Link to="/services">Gérer mes Serveurs</Link></li>
-          <li><Link to="/contact">Tableau de bord</Link></li>
+          <li><Link to="/dashboard">Tableau de bord</Link></li>
           <li><Link to="/commande">Gestion des noms de domaine</Link></li>
           <li><Link to="/facturation">Facturation & Avoirs</Link></li>
           <li><Link to="/informations">Informations personnelles</Link></li>
