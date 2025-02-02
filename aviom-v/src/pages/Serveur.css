@@ -333,7 +333,7 @@ button:hover {
 .order-button {
   padding: 10px;
   background-color: #008000;
-  color: white;
+  color: black;
   border: none;
   cursor: pointer;
 }
@@ -341,48 +341,56 @@ button:hover {
 .service-table, .service-table td, .service-table th {
   color: black;
 }
-/* Conteneur pour les boutons Créer */
+/* Container des boutons */
 .create-buttons-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  /* Espacement uniforme entre les boutons */
+  align-items: center;  /* Centrer verticalement les boutons */
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
-/* Wrapper pour chaque bouton Créer */
-.create-btn-wrapper {
-  width: 23%;
-  text-align: center;
-}
-
-/* Style des boutons Créer */
+/* Conteneur du bouton */
 .create-btn {
-  padding: 10px 15px;
+  position: absolute;
+  padding: 10px 20px;
   font-size: 14px;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  width: 100%;
+  width: 100px;
 }
-/* Couleurs spécifiques pour chaque plan */
+
+/* Exemple pour positionner le premier bouton à 50px du haut et 100px de la gauche */
 .create-btn.eco {
-  background-color: #00b100; /* Couleur ECO */
+  background-color: #28a745;
+  top: 815px;
+  left: 950px;
   color: black;
 }
 
+/* Ajouter un autre bouton à une autre position */
 .create-btn.duo {
-  background-color: #007bff; /* Couleur DUO */
+  background-color: #007bff;
+  top: 815px;  /* Positionner à 120px du haut */
+  left: 1150px; /* Positionner à 250px de la gauche */
   color: black;
 }
+
 
 .create-btn.trio {
   background-color: #ff0000; /* Couleur TRIO */
   color: black;
+  top: 815px;  /* Positionner à 120px du haut */
+  left: 1330px; /* Positionner à 250px de la gauche */
 }
 
 .create-btn.pro {
   background-color: #808080; /* Couleur PRO */
   color: black;
+  top: 815px;  /* Positionner à 120px du haut */
+  left: 1530px; /* Positionner à 250px de la gauche */
 }
 
 /* Aligner les colonnes avec les boutons Créer */
