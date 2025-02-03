@@ -144,19 +144,12 @@ const Serveur = () => {
                 <td className="pro">✔</td>
               </tr>
               <div className="create-buttons-container">
-              <div className="create-btn-wrapper">
-                <button className="create-btn eco">Créer</button>
+                <button className="create-btn eco" onClick={() => handleButtonClick("eco")}>Créer</button>
+                <button className="create-btn duo" onClick={() => handleButtonClick("duo")}>Créer</button>
+                <button className="create-btn trio" onClick={() => handleButtonClick("trio")}>Créer</button>
+                <button className="create-btn pro" onClick={() => handleButtonClick("pro")}>Créer</button>
               </div>
-              <div className="create-btn-wrapper">
-                <button className="create-btn duo">Créer</button>
-              </div>
-              <div className="create-btn-wrapper">
-                <button className="create-btn trio">Créer</button>
-              </div>
-              <div className="create-btn-wrapper">
-                <button className="create-btn pro">Créer</button>
-              </div>
-            </div>
+
                   </tbody>
                 </table>
               </div>
