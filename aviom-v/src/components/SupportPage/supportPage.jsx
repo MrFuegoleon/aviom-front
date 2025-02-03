@@ -9,7 +9,7 @@ import {
   FaGlobe,
   FaLifeRing
 } from "react-icons/fa";
-import "./SupportPage.css";
+import "./supportPage.css";
 
 const SupportPage = () => {
   const [activeTab, setActiveTab] = useState("tickets");

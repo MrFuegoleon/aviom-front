@@ -1,0 +1,191 @@
+/* Conteneur principal */
+.dm-container {
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f6fa;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+  .dm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .dm-header h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  /* Bouton d'ajout */
+  .dm-add-btn {
+    background: #fff;
+    color: #007bff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .dm-add-btn:hover {
+    background: #e0e0e0;
+  }
+  
+  /* Liste principale */
+  .dm-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+  }
+  
+  /* Carte de domaine */
+  .dm-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dm-info h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: #007bff;
+  }
+  
+  .dm-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  /* Actions sur la carte */
+  .dm-actions button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: 5px;
+    color: #007bff;
+    transition: color 0.3s;
+  }
+  
+  .dm-actions button:hover {
+    color: #0056b3;
+  }
+  
+  /* Modal général (ajout et édition) */
+  .dm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .dm-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .dm-modal-content h2 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #007bff;
+  }
+  
+  /* Formulaire du modal */
+  .dm-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .dm-form input,
+  .dm-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Actions du formulaire */
+  .dm-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .dm-submit-btn,
+  .dm-cancel-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .dm-submit-btn {
+    background: #007bff;
+    color: #fff;
+  }
+  
+  .dm-cancel-btn {
+    background: #ccc;
+    color: #333;
+  }
+  
+  .dm-submit-btn:hover {
+    background: #0056b3;
+  }
+  
+  .dm-cancel-btn:hover {
+    background: #aaa;
+  }
+  
+  /* Bouton de fermeture du modal d'édition */
+  .dm-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .dm-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #007bff;
+    transition: color 0.3s;
+  }
+  
+  .dm-close-btn:hover {
+    color: #0056b3;
+  }
+  

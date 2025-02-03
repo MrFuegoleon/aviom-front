@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   FaCloud, 
   FaChartLine, 
   FaServer, 
   FaDatabase, 
-  FaBell, 
-  FaCogs 
+  FaBell 
 } from "react-icons/fa";
 import CloudDashboard from "../components/CloudDashboard/cloudDashboard";
-import "./Dashboard.css";
+import "./dashboard.css";
 
 const Dashboard = () => {
   // Données dynamiques pour le header
