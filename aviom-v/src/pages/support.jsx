@@ -1,11 +1,11 @@
 import React from 'react';
-
+import SupportPage from '../components/SupportPage/supportPage';
 function Support() {
   return (
     <div>
-      <h1>Support</h1>
-      <p>Voici la page de support.</p>
-    </div>
+
+        <SupportPage/>
+  </div>
   );
 }
 

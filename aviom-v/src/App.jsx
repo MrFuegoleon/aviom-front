@@ -8,6 +8,7 @@ import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
 import Support from "./pages/support";
 import Informations from "./pages/informations"; // Assurez-vous d'importer le composant
+import './App.css'
 
 const App = () => {
   return (

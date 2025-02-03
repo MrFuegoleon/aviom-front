@@ -1,37 +1,102 @@
 /* Conteneur principal */
 .app-container {
-    display: flex;
-    min-height: 100vh;
-  }
-  
-  /* Sidebar */
+  display: flex;
+  min-height: 100vh;
+  flex-direction: row; /* Alignement horizontal */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px; /* Largeur de la sidebar */
+  background-color: #2c3e50; /* Couleur de fond */
+  color: #ecf0f1; /* Couleur du texte */
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
+  height: 100vh; /* Hauteur totale de la vue */
+  position: fixed; /* Sidebar fixe */
+  top: 0;
+  left: 0;
+  transition: width 0.3s ease; /* Animation pour la largeur */
+}
+
+/* Contenu principal */
+.main-content {
+  padding: 20px;
+  margin-left: 270px; /* Espace entre la sidebar et le contenu */
+  background-color: #f4f4f4; /* Couleur de fond du contenu */
+  height: 100vh; /* Hauteur totale du contenu */
+  transition: margin-left 0.3s ease; /* Animation pour la marge */
+}
+
+/* Réduire la largeur de la sidebar sur les petits écrans */
+@media (max-width: 768px) {
   .sidebar {
-    width: 250px; /* Largeur de la sidebar */
-    background-color: #2c3e50; /* Couleur de fond */
-    color: #ecf0f1; /* Couleur du texte */
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
-    position: fixed; /* Fixer la sidebar */
-    height: 100vh; /* Hauteur totale de la vue */
-    z-index: 1000; /* Assure que la sidebar est au-dessus du contenu */
-    transition: width 0.3s ease; /* Animation pour la largeur */
+    width: 60px; /* Largeur réduite */
   }
-  
-  /* Contenu principal */
   .main-content {
-    flex: 1; /* Prend tout l'espace restant */
-    margin-left: 250px; /* Marge égale à la largeur de la sidebar */
-    padding: 20px;
-    background-color: #f4f4f4; /* Couleur de fond du contenu */
-    transition: margin-left 0.3s ease; /* Animation pour la marge */
+    margin-left: 80px; /* Ajuste l'espacement pour les petits écrans */
   }
-  
-  /* Réduire la largeur de la sidebar sur les petits écrans */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 60px; /* Largeur réduite */
-    }
-    .main-content {
-      margin-left: 60px; /* Marge réduite */
-    }
+
+  .sidebar .logo,
+  .sidebar .nav-menu li a span,
+  .sidebar .subscribe-btn {
+    display: none;
   }
+}
+
+/* Autres styles pour la sidebar, les liens, etc. */
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #3498db;
+}
+
+/* Style du menu de navigation */
+.sidebar .nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .nav-menu li {
+  margin-bottom: 15px;
+}
+
+.sidebar .nav-menu li a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .nav-menu li a:hover {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.sidebar .nav-menu li a svg {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Style du bouton d'inscription */
+.sidebar .subscribe-btn {
+  margin-top: auto;
+  padding: 10px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .subscribe-btn:hover {
+  background-color: #2980b9;
+}

@@ -1,101 +1,170 @@
-/* ================= HEADER ================= */
-.header {
-    grid-row: 1;
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #00447a, #0078d7);
-    color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    height: 12vh;
-    max-width: 100%;
-    width: 100%;
-}
-
-/* ================= CONTENEUR GLOBAL ================= */
-.grid-item { 
-    background: white;
+/* Styles globaux */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f6fa;
+  }
+  
+  /* Container principal */
+  .dashboard-container {
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 100%; /* S’adapte au "gros div" */
-    width: 100%; /* Prend toute la largeur */
-    max-width: 1200px;
-    margin: auto;
+  }
+  
+  /* Header animé */
+  .dashboard-header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .header-text h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    background: linear-gradient(90deg, #e67e22, #f1c40f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .header-text p {
+    margin: 8px 0 0;
+    color: #bdc3c7;
+    font-size: 1rem;
+  }
+  
+  .header-icons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  /* NotificationBell */
+  .notification-bell {
+    position: relative;
+    padding: 12px;
+    border-radius: 50%;
+    background-color: #3498db;
+    display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* Charts en pleine largeur */
-.charts-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
+    cursor: pointer;
+  }
+  
+  .notification-bell svg {
+    color: #fff;
+    font-size: 1.4rem;
+  }
+  
+  .notification-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #e74c3c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+  }
+  
+  /* Contenu principal */
+  .dashboard-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  
+  /* StatCard */
+  .stat-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  }
+  
+  .stat-card h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .stat-content {
+    margin-top: 15px;
+  }
+  
+  /* Section Services */
+  .dashboard-services {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+  }
+  
+  .dashboard-services h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .services-grid {
+    display: grid;
     gap: 20px;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
-/* ================= STYLE INDIVIDUEL DES GRAPHIQUES ================= */
-.chart {
-    flex: 1;
-    min-width: 45%; /* S’assure que 2 graphiques rentrent côte à côte */
-    max-width: 50%;
-    height: 40vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f8f8f8;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Effet de réduction progressive sur petits écrans */
-@media (max-width: 1024px) {
-    .charts-container {
-        flex-direction: column; /* Passe en colonne */
-        align-items: center;
-    }
-
-    .chart {
-        min-width: 80%;
-        max-width: 90%;
-        height: 35vh;
-        transform: scale(0.9); /* Réduction progressive */
-    }
-}
-
-@media (max-width: 768px) {
-    .chart {
-        min-width: 100%;
-        height: 30vh;
-        transform: scale(0.8);
-    }
-}
-
-@media (max-width: 480px) {
-    .chart {
-        min-width: 100%;
-        height: 25vh;
-        transform: scale(0.7); /* Encore plus petit */
-    }
-
-    .header h1 {
-        font-size: 1.2rem;
-    }
-
-    .header p {
-        font-size: 0.9rem;
-    }
-}
+  }
+  
+  /* ServiceCard */
+  .service-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .service-icon {
+    color: #3498db;
+    margin-bottom: 12px;
+    font-size: 2rem;
+  }
+  
+  .service-card h3 {
+    margin: 10px 0 8px;
+    color: #2c3e50;
+    font-size: 1.4rem;
+  }
+  
+  .service-card p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+  }
+  
+  /* Section Logs */
+  .dashboard-logs {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+  }
+  
+  .dashboard-logs h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .logs-container {
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    border-top: 1px solid #eee;
+  }
+  
+  .log-entry {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
