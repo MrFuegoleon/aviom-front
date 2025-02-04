@@ -1,0 +1,106 @@
+/* Register.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #34bede, #289bb0);
+  font-family: 'Poppins', sans-serif;
+  padding: 40px 0;
+  width: 100vw;
+  overflow-y: auto;
+}
+
+.register-box {
+  background: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 1100px;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.register-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.register-box h2, .register-box h3 {
+  text-align: center;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.3s;
+  background: #f9f9f9;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #34bede;
+  box-shadow: 0 0 10px rgba(52, 190, 222, 0.6);
+  outline: none;
+}
+
+textarea {
+  resize: none;
+  height: 120px;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(90deg, #34bede, #289bb0);
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #289bb0, #207a9a);
+  transform: translateY(-3px);
+}
+
+/* Ajustement pour éviter trop d'espace bleu */
+@media screen and (min-width: 1200px) {
+  .register-container {
+    align-items: center;
+    height: auto;
+    padding-top: 20px;
+    padding-bottom: 50px;
+  }
+}
