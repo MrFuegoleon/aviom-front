@@ -5,7 +5,7 @@ const Serveur = () => {
   const [showForm, setShowForm] = useState(false);
   const [serverName, setServerName] = useState("");
   const [selectedConfig, setSelectedConfig] = useState(null);
-
+  const [selectedOffer, setSelectedOffer] = useState(null);
   const handleCreateClick = () => {
     setShowForm(true);
   };
@@ -22,6 +22,16 @@ const Serveur = () => {
     setSelectedConfig(config);
   };
 
+  const handleButtonClick = (offerType) => {
+    const offers = {
+      eco: { name: "Serveur Cloud ECO", cpu: "1-2 vCores", ram: "1-4 Go", ssd: "10 Go", price: "9€/mois HT", color: "#5cb85c" },
+      duo: { name: "Serveur Cloud DUO", cpu: "2-5 vCores", ram: "2-9 Go", ssd: "20-70 Go", price: "19€/mois HT", color: "#0275d8" },
+      trio: { name: "Serveur Cloud TRIO", cpu: "3-7 vCores", ram: "4-11 Go", ssd: "50-90 Go", price: "29€/mois HT", color: "#d9534f" },
+      pro: { name: "Serveur Cloud PRO", cpu: "Personnalisable", ram: "Personnalisable", ssd: "Personnalisable", price: "Sur Devis", color: "#292b2c" }
+    };
+  
+    setSelectedOffer(offers[offerType]);
+  };
   return (
     <div className="serveur-container">
       <header className="serveur-header">
@@ -201,15 +211,26 @@ const Serveur = () => {
             )}
           </div>
 
-          {/* Résumé */}
-          <div className="summary">
-            <h5>Résumé</h5>
-            <p>Nom : {serverName || "Nom du serveur non spécifié"}</p>
-            <p>Configuration : Serveur Cloud L - 24€/mois</p>
-            <p>Ressources : 2 vCore, 4 Go RAM, 80 Go SSD</p>
-            <button className="submit-button">Valider</button>
-          </div>
-
+          {selectedConfig === "classique" && selectedOffer && (
+            <div className="config-details">
+            
+              <div className="summary-header" style={{ background: selectedOffer.color }}>
+                <h5>Résumé</h5>
+              </div>
+              <div className="summary-content">
+                <p><strong>Nom :</strong> {selectedOffer.name}</p>
+                <p><strong>Tarif :</strong> {selectedOffer.price}</p>
+                <p><strong>Configuration :</strong></p>
+                <ul>
+                  <li><strong>CPU :</strong> {selectedOffer.cpu}</li>
+                  <li><strong>RAM :</strong> {selectedOffer.ram}</li>
+                  <li><strong>SSD :</strong> {selectedOffer.ssd}</li>
+                </ul>
+                <button className="submit-button">Valider</button>
+              </div>
+              </div>
+            
+          )}
           {/* Bouton de retour */}
           <button className="back-button" onClick={handleBackClick}>Retour</button>
         </div>

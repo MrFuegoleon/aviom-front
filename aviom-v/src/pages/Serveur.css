@@ -408,3 +408,114 @@ button:hover {
   padding: 10px;
   text-align: center;
 }
+/* Résumé amélioré */
+.summary-container {
+  position: fixed;
+  right: 30px;
+  top: 100px;
+  width: 380px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  border-left: 6px solid #289bb0;
+}
+
+/* En-tête du résumé */
+.summary-header {
+  background: linear-gradient(90deg, #34bede, #289bb0);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Contenu du résumé */
+.summary-content {
+  padding: 15px;
+  color: #444;
+  font-size: 14px;
+}
+
+.summary-content p {
+  margin: 10px 0;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Liste des caractéristiques */
+.summary-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.summary-content ul li {
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+/* Bouton de validation */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #34bede, #289bb0);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  margin-top: 15px;
+}
+
+.submit-button:hover {
+  background: linear-gradient(90deg, #289bb0, #207a9a);
+  transform: translateY(-3px);
+}
+/* Correction pour éviter le chevauchement */
+.summary-box {
+  position: absolute;
+  right: 10px;
+  top: 700px;
+  width: 350px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  border-left: 6px solid #289bb0;
+}
+
+/* Ajustement pour placer le résumé sous le tableau si l'écran est trop petit */
+@media screen and (max-width: 1400px) {
+  .summary-box {
+    position: relative;
+    right: 0;
+    margin-top: 20px;
+  }
+}
+.config-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
