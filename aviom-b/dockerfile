@@ -1,0 +1,18 @@
+# Utilisation de Node.js
+FROM node:18
+
+# Définir le répertoire de travail
+WORKDIR /
+
+# Copier les fichiers
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copier le reste des fichiers
+COPY . .
+
+# Exposer le port
+EXPOSE 5000
+
+# Démarrer le serveur
+CMD ["npm", "run", "dev"]

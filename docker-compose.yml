@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: aviom-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: aviom2025
+      MYSQL_USER: root
+      MYSQL_PASSWORD: aviompass
+    ports:
+      - "3305:3305"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  aviom-b:
+    build: ./aviom-b
+    container_name: aviom-b
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      # Variables pour permettre à votre backend de se connecter à MariaDB
+      DB_HOST: mariadb
+      DB_USER: aviomuser
+      DB_PASSWORD: aviompass
+      DB_NAME: aviom2025
+    expose:
+      - "5000"   # Port interne pour Express.js
+
+  aviom-v:
+    build: ./aviom-v
+    container_name: aviom-v
+    restart: always
+    depends_on:
+      - aviom-b
+    expose:
+      - "5173"   # Port interne pour le serveur statique du build Vite
+
+  nginx:
+    image: nginx:latest
+    container_name: aviom-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - aviom-v
+      - aviom-b
+
+volumes:
+  mariadb_data:

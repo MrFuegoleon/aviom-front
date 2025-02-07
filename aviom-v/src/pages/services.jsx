@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import "./Serveur.css";
+import MachineDetails from "../components/MachineData/machine";
+import axios from 'axios';
 
 const Serveur = () => {
   const [showForm, setShowForm] = useState(false);
   const [serverName, setServerName] = useState("");
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
+  const [machines, setMachines] = useState([]);
+  const [message, setMessage] = useState('');
   const handleCreateClick = () => {
     setShowForm(true);
   };
@@ -32,15 +36,32 @@ const Serveur = () => {
   
     setSelectedOffer(offers[offerType]);
   };
+
+  const handleActionClick = () => {
+    axios.post('/api/create-vm')
+      .then(response => {
+        setMessage('Machine créée avec succès');
+        // On suppose que la réponse renvoie un objet du type { data: { server: { ... } } }
+        const newMachine = response.data.data;
+        // Ajouter la nouvelle machine à la liste existante
+        setMachines(prevMachines => [...prevMachines, newMachine]);
+        console.log(newMachine)
+      })
+      .catch(error => {
+        setMessage('Erreur lors de la création de la machine');
+        console.error('Erreur:', error.response ? error.response.data : error.message);
+      });
+  };
+
   return (
     <div className="serveur-container">
       <header className="serveur-header">
         <h2>Serveurs</h2>
         <div className="actions">
           <button className="create-button" onClick={handleCreateClick}>
-            Créer
+            Actions
           </button>
-          <button className="action-button">Actions</button>
+          <button className="action-button" onClick={handleActionClick}>Créer</button>
           <button className="action-button">Réseau</button>
           <button className="filter-button">Filtre ▾</button>
         </div>
@@ -263,6 +284,19 @@ const Serveur = () => {
           </tbody>
         </table>
       )}
+      {message && <p>{message}</p>}
+      <div className="machines-list">
+        {machines.length === 0 ? (
+          <p>Aucune machine créée pour l'instant.</p>
+        ) : (
+          machines.map((machine, index) => {
+            // Si la machine est indéfinie, on renvoie null
+            if (!machine) return null;
+            return <MachineDetails key={machine.id || index} machine={machine} />;
+          })
+        )}
+      </div>
+
     </div>
   );
 };
