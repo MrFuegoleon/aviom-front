@@ -519,3 +519,87 @@ button:hover {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+/* Conteneur principal */
+.register-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Boîte du formulaire */
+.register-box {
+  width: 100%;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre du formulaire */
+.register-box h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Style des champs de saisie */
+.register-box input,
+.register-box select,
+.register-box textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Style du textarea */
+.register-box textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* Conteneur des colonnes */
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Chaque colonne prend la moitié de la largeur */
+.column {
+  width: 48%;
+}
+
+/* Boutons */
+.register-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.register-box button:hover {
+  background-color: #0056b3;
+}
+
+/* Bouton Retour */
+.register-box button[type="button"] {
+  background-color: #dc3545;
+}
+
+.register-box button[type="button"]:hover {
+  background-color: #b02a37;
+}

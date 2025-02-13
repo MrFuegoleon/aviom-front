@@ -9,6 +9,7 @@ import Commande from "./pages/commande";
 import Support from "./pages/support";
 import Informations from "./pages/informations"; // Assurez-vous d'importer le composant
 import './App.css'
+import ConfirmationPaiement from "./pages/ConfirmationPaiement";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/commande" element={<Commande />} />
             <Route path="/informations" element={<Informations />} /> {/* Correction du chemin */}
             <Route path="/support" element={<Support />} />
+            <Route path="/confirmation-paiement" element={<ConfirmationPaiement />} />
           </Routes>
         </main>
       </div>
