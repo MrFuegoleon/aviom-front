@@ -167,4 +167,18 @@ body {
     padding: 10px 0;
     border-bottom: 1px solid #eee;
   }
+  .logout-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .logout-button:hover {
+    background-color: #c0392b;
+  }
   
