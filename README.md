@@ -1,3 +1,21 @@
+# Exécution du projet
+
+## Étapes pour exécuter le fichier
+
+1. **Ouvrir le terminal** et se déplacer dans le répertoire `aviom-b` en exécutant la commande suivante :  
+   ```sh
+   cd aviom-b
+   npm run dev
+
+2. Ouvrir un nouveau terminal et se déplacer dans le répertoire aviom-v en exécutant la commande suivante :
+    ```sh
+    cd aviom-v
+    npm run dev
+
+3. Ouvrir le lien qui s'affiche dans le terminal après l'exécution de la dernière commande
+
+
+
 Aviom est une start-up du numérique spécialisée dans la vente de services cloud et divers autres domaines, notamment la commercialisation de logiciels, le consulting, et plus généralement les services aux micro-entreprises de services numériques (ESN). Elle met un point d’honneur à appliquer les meilleures pratiques de développement dans toutes ses activités.
 En tant qu'entreprise spécialisée dans la vente de services informatiques, Aviom se doit de donner l'exemple en matière de bonnes pratiques. C'est dans ce contexte que ce projet prend tout son sens.
 Le site web d'Aviom est composé de deux entités principales :
