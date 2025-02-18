@@ -2,12 +2,12 @@
 
 ## Étapes pour exécuter le fichier
 
-1. **Ouvrir le terminal** et se déplacer dans le répertoire `aviom-b` en exécutant la commande suivante :  
+1. Ouvrir le terminal et se déplacer dans le répertoire `aviom-b` en exécutant la commande suivante :  
    ```sh
    cd aviom-b
    npm run dev
 
-2. Ouvrir un nouveau terminal et se déplacer dans le répertoire aviom-v en exécutant la commande suivante :
+2. Ouvrir un nouveau terminal et se déplacer dans le répertoire `aviom-v` en exécutant la commande suivante :
     ```sh
     cd aviom-v
     npm run dev
