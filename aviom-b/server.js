@@ -15,7 +15,7 @@ const logoutRoutes = require('./routes/logout');
 
 console.log("🔹 Tentative d'authentification Keycloak...");
 console.log("🔹 Client ID:", "myclient");
-console.log("🔹 Client Secret:", "thQJgrym9MFTJKkSwwdMphci2qwotaQ6");
+console.log("🔹 Client Secret:", "6cm46sHZe3yqykWDHvnWPcwnjJRtl2wN");
 console.log("🔹 URL Keycloak:", "http://localhost:8080/realms/Aviom/protocol/openid-connect/token");
 
 
