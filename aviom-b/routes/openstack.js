@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const app = express();
+const axios = require("axios");
+
 
 // Configuration OpenStack (à adapter et sécuriser)
 const OS_IDENTITY_URL = 'http://156.18.114.237:5000/v3'; // Endpoint Keystone (v3)
@@ -57,8 +59,8 @@ async function ensureKeypairExists(token) {
 }
 
 // Endpoint pour créer une VM et récupérer ses détails complets
-app.get('/create-vm', async (req, res) => {
-  try {
+router.get('/create-vm', async (req, res) => {
+    try {
     // 1. Authentification via Keystone pour obtenir un token
     const authPayload = {
       auth: {
