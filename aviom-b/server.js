@@ -13,10 +13,10 @@ const logoutRoutes = require("./routes/logout");
 
 console.log("🔹 Tentative d'authentification Keycloak...");
 console.log("🔹 Client ID:", "myclient");
-console.log("🔹 Client Secret:", "thQJgrym9MFTJKkSwwdMphci2qwotaQ6");
+console.log("🔹 Client Secret:", "6cm46sHZe3yqykWDHvnWPcwnjJRtl2wN");
 console.log(
-  "🔹 URL Keycloak (Token endpoint):",
-  "http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/token"
+  "🔹 URL Keycloak:",
+  "http://localhost:8080/realms/Aviom/protocol/openid-connect/token"
 );
 
 const app = express();
@@ -50,25 +50,18 @@ app.get("/", async (req, res) => {
 
 // ✅ Route de redirection vers Keycloak pour l'authentification
 app.get("/auth/login", (req, res) => {
-  // Remarquez le remplacement de "localhost:8080" par "localhost/auth"
-  const authUrl =
-    `http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/auth` +
-    `?client_id=myclient` +
-    `&response_type=code` +
-    `&scope=openid` +
-    `&redirect_uri=${encodeURIComponent("http://localhost:5173/callback")}`;
-  console.log("🔄 Redirection vers Keycloak:", authUrl);
+  const authUrl = `http://localhost:8080/realms/Aviom/protocol/openid-connect/auth?client_id=myclient&response_type=code&scope=openid&redirect_uri=http://localhost:5173/callback `;
   res.redirect(authUrl);
 });
 
-// ✅ Route protégée avec Keycloak
+// ✅ Route protégée avec Keycloak
 app.get("/api/protected", keycloak.protect("api_user"), (req, res) => {
-  res.json({ message: "✅ Accès autorisé avec Keycloak" });
+  res.json({ message: "✅ Accès autorisé avec Keycloak" });
 });
 
 // ────────────────────────────────────────────────────────────────────────────────
-// 🔹 **LANCEMENT DU SERVEUR**
+// 🔹 *LANCEMENT DU SERVEUR*
 // ────────────────────────────────────────────────────────────────────────────────
 app.listen(5000, () => {
-  console.log("✅  port 5000");
+  console.log("✅  port 5000");
 });
