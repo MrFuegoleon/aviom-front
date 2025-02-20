@@ -8,12 +8,30 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: aviom2025
-      MYSQL_USER: root
+      MYSQL_USER: aviomuser
       MYSQL_PASSWORD: aviompass
     ports:
-      - "3305:3305"
+      - "3305:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
+
+  keycloak:
+    image: youssefsami/keycloak:latest
+    container_name: keycloak
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      # Cette URL sera utilisée par Keycloak pour générer ses liens publics
+      KC_FRONTEND_URL: http://localhost:8080/auth
+      KC_HTTP_RELATIVE_PATH: /auth
+
+    command: start-dev
+    volumes:
+      - keycloak_data:/opt/keycloak/data
 
   aviom-b:
     build: ./aviom-b
@@ -21,14 +39,19 @@ services:
     restart: always
     depends_on:
       - mariadb
+      - keycloak
     environment:
-      # Variables pour permettre à votre backend de se connecter à MariaDB
       DB_HOST: mariadb
       DB_USER: aviomuser
       DB_PASSWORD: aviompass
       DB_NAME: aviom2025
+      KEYCLOAK_CLIENT_ID: myclient
+      KEYCLOAK_CLIENT_SECRET: hsnttRw8hbCzlQ6r2R7CBxnPkQpJcaJX
+      SESSION_SECRET: ma_super_cle_secrete
+      # Cette URL doit pointer vers l'endpoint de Keycloak pour l'échange de code
+      KEYCLOAK_URL: http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/token
     expose:
-      - "5000"   # Port interne pour Express.js
+      - "5000"
 
   aviom-v:
     build: ./aviom-v
@@ -37,7 +60,7 @@ services:
     depends_on:
       - aviom-b
     expose:
-      - "5173"   # Port interne pour le serveur statique du build Vite
+      - "5173"
 
   nginx:
     image: nginx:latest
@@ -50,6 +73,8 @@ services:
     depends_on:
       - aviom-v
       - aviom-b
+      - keycloak
 
 volumes:
   mariadb_data:
+  keycloak_data:

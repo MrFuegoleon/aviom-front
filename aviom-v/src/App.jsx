@@ -13,9 +13,8 @@ import ConfirmationPaiement from "./pages/ConfirmationPaiement";
 import Callback from "./pages/Callback"; // Gestion du retour Keycloak
 import "./App.css";
 
-// 📌 Fonction qui redirige vers Keycloak
 const loginWithKeycloak = () => {
-  const keycloakURL = `http://localhost:8080/realms/Aviom/protocol/openid-connect/auth` +
+  const keycloakURL = `http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/auth` +
     `?client_id=myclient` +
     `&redirect_uri=${encodeURIComponent(window.location.origin + "/callback")}` +
     `&response_type=code` +
@@ -24,6 +23,7 @@ const loginWithKeycloak = () => {
   console.log("🔄 Redirection vers Keycloak:", keycloakURL);
   window.location.href = keycloakURL;
 };
+
 
 
 // 📌 Route protégée

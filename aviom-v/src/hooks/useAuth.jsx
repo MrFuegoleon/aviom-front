@@ -29,15 +29,16 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = () => {
-    const keycloakURL = `http://localhost:8080/realms/Aviom/protocol/openid-connect/auth
-      ?client_id=myclient
-      &redirect_uri=${window.location.origin}/callback
-      &response_type=code
-      &scope=openid`;
+    const keycloakURL = `http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/auth` +
+      `?client_id=myclient` +
+      `&redirect_uri=${encodeURIComponent(window.location.origin + "/callback")}` +
+      `&response_type=code` +
+      `&scope=openid`;
   
     console.log("🔄 Redirection vers Keycloak:", keycloakURL);
     window.location.href = keycloakURL;
   };
+  
   
 
   const logout = async () => {
