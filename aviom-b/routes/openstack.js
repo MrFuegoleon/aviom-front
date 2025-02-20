@@ -1,12 +1,9 @@
+// routes/openstack.js
 const express = require('express');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const fs = require('fs');
-
+const router = express.Router();
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+const axios = require("axios");
+
 
 // Configuration OpenStack (à adapter et sécuriser)
 const OS_IDENTITY_URL = 'http://156.18.114.237:5000/v3'; // Endpoint Keystone (v3)
@@ -22,10 +19,6 @@ const OS_NOVA_URL = 'http://156.18.114.237:8774/v2.1';
 const KEYPAIR_NAME = 'mykey';
 // Chemin pour sauvegarder la clé privée (si création de la paire)
 const KEYPAIR_FILE = 'mykey.pem';
-
-app.get('/', async (req, res) => {
-  res.send('Backend Express pour OpenStack est en marche.');
-});
 
 // Fonction pour vérifier si la paire de clés existe et la créer si nécessaire
 async function ensureKeypairExists(token) {
@@ -66,8 +59,8 @@ async function ensureKeypairExists(token) {
 }
 
 // Endpoint pour créer une VM et récupérer ses détails complets
-app.get('/create-vm', async (req, res) => {
-  try {
+router.get('/create-vm', async (req, res) => {
+    try {
     // 1. Authentification via Keystone pour obtenir un token
     const authPayload = {
       auth: {
@@ -146,7 +139,4 @@ app.get('/create-vm', async (req, res) => {
   }
 });
 
-// Lancer le serveur Express sur le port 3000
-app.listen(3000, () => {
-  console.log('Serveur Express démarré sur le port 3000');
-});
+module.exports = router;
