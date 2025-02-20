@@ -1,19 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const { keycloak, memoryStore } = require("./keycloak-config");
 const session = require("express-session");
 require("dotenv").config();
+
+const openstackRoutes = require('./routes/openstack.js');
+
 console.log("🔹 Tentative d'authentification Keycloak...");
 console.log("🔹 Client ID:", "myclient");
 console.log("🔹 Client Secret:", "thQJgrym9MFTJKkSwwdMphci2qwotaQ6");
 console.log("🔹 URL Keycloak:", "http://localhost:8080/realms/Aviom/protocol/openid-connect/token");
 
-// 📌 Importation de la configuration Keycloak
-const { keycloak, memoryStore } = require("./keycloak-config");
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:5173"], // Ajoute l'URL de Vite
+  origin: ["http://localhost:5173"],
   credentials: true
 }));
 app.use(express.json());
@@ -26,6 +28,12 @@ app.use(session({
   store: memoryStore
 }));
 app.use(keycloak.middleware());
+app.use("/api/openstack", openstackRoutes);
+
+
+app.get('/', async (req, res) => {
+  res.send('Backend Express pour OpenStack est en marche.');
+});
 
 // ✅ Route de redirection vers Keycloak pour l'authentification
 app.get("/auth/login", (req, res) => {
@@ -81,7 +89,6 @@ app.post("/api/logout", async (req, res) => {
 app.get("/api/protected", keycloak.protect("api_user"), (req, res) => {
   res.json({ message: "✅ Accès autorisé avec Keycloak" });
 });
-
 
 
 
