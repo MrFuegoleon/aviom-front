@@ -4,19 +4,18 @@ const axios = require("axios");
 const { keycloak, memoryStore } = require("./keycloak-config");
 const session = require("express-session");
 require("dotenv").config();
+const bodyParser = require('body-parser');
+const passport = require('./passport-config');
+const authenticateJWT = require('./middlewares/authenticateJWT.js'); // Chemin vers votre middleware
+
 
 const openstackRoutes = require('./routes/openstack.js');
 const gocardlessRoutes = require('./routes/gocardless.js');
 const paypalRoutes = require('./routes/paypal.js');
 const exchangeTokenRoutes = require('./routes/exchangeToken.js');
 const logoutRoutes = require('./routes/logout');
-
-
-
-console.log("🔹 Tentative d'authentification Keycloak...");
-console.log("🔹 Client ID:", "myclient");
-console.log("🔹 Client Secret:", "thQJgrym9MFTJKkSwwdMphci2qwotaQ6");
-console.log("🔹 URL Keycloak:", "http://localhost:8080/realms/Aviom/protocol/openid-connect/token");
+const authRoutes = require('./routes/login');
+const protectedRoutes = require('./routes/protected');
 
 
 const app = express();
@@ -25,6 +24,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(passport.initialize());
+
 
 // 📌 Ajout du middleware Keycloak
 app.use(session({
@@ -33,35 +35,22 @@ app.use(session({
   saveUninitialized: true,
   store: memoryStore
 }));
-app.use(keycloak.middleware());
-app.use("/api/openstack", openstackRoutes);
+
+app.use('/api/auth', authRoutes);
+app.use('/api/protected', protectedRoutes);
+app.use("/api/openstack",authenticateJWT, openstackRoutes);
 app.use("/api/gocardless", gocardlessRoutes);
 app.use("/api/paypal", paypalRoutes);
 app.use("/api/exchange-token", exchangeTokenRoutes);
 app.use("/api/logout", logoutRoutes);
 
 
-
 app.get('/', async (req, res) => {
   res.send('Backend Express pour OpenStack est en marche.');
 });
 
-// ✅ Route de redirection vers Keycloak pour l'authentification
-app.get("/auth/login", (req, res) => {
-  const authUrl = `http://localhost:8080/realms/Aviom/protocol/openid-connect/auth?client_id=myclient&response_type=code&scope=openid&redirect_uri=http://localhost:5173/callback`;
-  res.redirect(authUrl);
-});
 
 
-// ✅ Route protégée avec Keycloak
-app.get("/api/protected", keycloak.protect("api_user"), (req, res) => {
-  res.json({ message: "✅ Accès autorisé avec Keycloak" });
-});
-
-
-// ────────────────────────────────────────────────────────────────────────────────
-// 🔹 **LANCEMENT DU SERVEUR**
-// ────────────────────────────────────────────────────────────────────────────────
 app.listen(5000, () => {
   console.log("✅ Serveur backend en écoute sur le port 5000");
 });

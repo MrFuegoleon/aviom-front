@@ -1,43 +1,40 @@
+/*
+const mysql = require('mysql2/promise');
 require('dotenv').config();
-const mariadb = require('mariadb');
 
-console.log(" Paramètres de connexion à MariaDB:");
-console.log(` Host: ${process.env.DB_HOST}`);
-console.log(` Port: ${process.env.DB_PORT}`);
-console.log(` User: ${process.env.DB_USER}`);
-console.log(` Database: ${process.env.DB_NAME}`);
-
-const pool = mariadb.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  connectionLimit: 10,  
-  acquireTimeout: 60000, 
-  idleTimeout: 60000, 
-  connectTimeout: 60000,
-  waitForConnections: true, 
-  charset: 'utf8mb4' 
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'youruser',
+  password: process.env.DB_PASSWORD || 'yourpassword',
+  database: process.env.DB_NAME || 'yourdatabase',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-
-async function testDBConnection() {
-  let conn;
-  try {
-    console.log(" Tentative de connexion à MariaDB...");
-    conn = await pool.getConnection();
-    console.log(" Connexion réussie à MariaDB !");
-  } catch (err) {
-    console.error(" Erreur de connexion à MariaDB :", err.message);
-  } finally {
-    if (conn) {
-      conn.release();
-      console.log("Connexion libérée.");
-    }
-  }
+async function findUserByUsername(username) {
+  const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+  return rows[0];
 }
+*/
 
-testDBConnection();
+const users = [
+  {
+    id: 1,
+    username: 'user',
+    // Hash généré pour "password"
+    password: 'password'
+  },
+  {
+    id: 2,
+    username: 'admin',
+    // Hash généré pour "admin123"
+    password: 'admin'
+  }
+];
 
-module.exports = pool;
+async function findUserByUsername(username) {
+  // Simule une recherche dans une base de données en retournant la promesse résolue
+  return users.find(u => u.username === username);
+}
+module.exports = { findUserByUsername };

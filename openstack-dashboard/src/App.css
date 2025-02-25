@@ -1,0 +1,183 @@
+/* General styles */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Header */
+h1 {
+  color: #343a40;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Table Styling */
+.table {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Table Cells */
+.table th, .table td {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Buttons */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+/* Success (Start) Button */
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Warning (Stop) Button */
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: black;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+/* Danger (Delete) Button */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Info (Resize) Button */
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+}
+
+/* Secondary (Reboot) Button */
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Alert Styling */
+.alert {
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Modal Styles */
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.modal-footer button {
+  width: 100px;
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.form-select {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+/* Centering Spinner */
+.text-center .spinner-border {
+  margin: 20px auto;
+  display: block;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .table {
+    font-size: 14px;
+  }
+  
+  .table th, .table td {
+    padding: 10px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+  
+  .modal-footer button {
+    width: 80px;
+  }
+}
