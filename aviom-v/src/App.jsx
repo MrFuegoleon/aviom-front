@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Home from "./pages/home";
-import Services from "./pages/services";
+import Services from "./pages/serveur";
 import  Dashboard from "./pages/dashboard";
 import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
