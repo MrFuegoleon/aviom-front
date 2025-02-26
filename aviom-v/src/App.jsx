@@ -3,8 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "r
 import Sidebar from "./components/Sidebar/Sidebar";
 import { useAuth, AuthProvider } from "./hooks/useAuth";
 import Home from "./pages/home";
+<<<<<<< HEAD
 import Services from "./pages/services";
 import Dashboard from "./pages/dashboard";
+=======
+import Services from "./pages/serveur";
+import  Dashboard from "./pages/dashboard";
+>>>>>>> f725de35e652d67cc5aa0e76829753486e5e6814
 import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
 import Support from "./pages/support";
