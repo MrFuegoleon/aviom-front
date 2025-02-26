@@ -1,84 +1,103 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Sidebar from "./components/Sidebar/Sidebar";
-import { useAuth, AuthProvider } from "./hooks/useAuth";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import LoginForm from "./components/loginForm";
 import Home from "./pages/home";
-<<<<<<< HEAD
-import Services from "./pages/services";
-import Dashboard from "./pages/dashboard";
-=======
 import Services from "./pages/serveur";
-import  Dashboard from "./pages/dashboard";
->>>>>>> f725de35e652d67cc5aa0e76829753486e5e6814
+import Dashboard from "./pages/dashboard";
 import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
 import Support from "./pages/support";
 import Informations from "./pages/informations";
 import ConfirmationPaiement from "./pages/ConfirmationPaiement";
-import Callback from "./pages/Callback"; // Gestion du retour Keycloak
+import OpenMachine from "./pages/Machine";
+import PrivateRoute from "./PrivateRoute"; 
+import Sidebar from "./components/Sidebar/sidebar.jsx";
 import "./App.css";
 
-const loginWithKeycloak = () => {
-  const keycloakURL = `http://localhost:8080/auth/realms/Aviom/protocol/openid-connect/auth` +
-    `?client_id=myclient` +
-    `&redirect_uri=${encodeURIComponent(window.location.origin + "/callback")}` +
-    `&response_type=code` +
-    `&scope=openid`;
-
-  console.log("🔄 Redirection vers Keycloak:", keycloakURL);
-  window.location.href = keycloakURL;
-};
-
-
-
-// 📌 Route protégée
-const ProtectedRoute = ({ element }) => {
-  const { token } = useAuth();
-  console.log("🔍 [App] Vérification de `useAuth()`, token:", token);
-  return token ? element : loginWithKeycloak(); // 🔄 Redirige directement vers Keycloak
-};
-
-// 📌 Vérifie si l'utilisateur est connecté, sinon il le redirige vers Keycloak
-const AuthWrapper = ({ children }) => {
-  const { token } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!token) {
-      console.log("🚨 [AuthWrapper] Aucun token, redirection vers Keycloak");
-      loginWithKeycloak();
-    }
-  }, [token, navigate]);
-
-  return children;
-};
-
-const App = () => {
+function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AuthWrapper> {/* Redirection automatique vers Keycloak */}
-          <div className="app-container">
-            <Sidebar />
-            <main className="main-content">
-              <Routes>
-                <Route path="/callback" element={<Callback />} /> {/* Retour Keycloak */}
-                <Route path="/" element={<ProtectedRoute element={<Home />} />} />
-                <Route path="/services" element={<ProtectedRoute element={<Services />} />} />
-                <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-                <Route path="/facturation" element={<ProtectedRoute element={<Facturation />} />} />
-                <Route path="/commande" element={<ProtectedRoute element={<Commande />} />} />
-                <Route path="/informations" element={<ProtectedRoute element={<Informations />} />} />
-                <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
-                <Route path="/confirmation-paiement" element={<ProtectedRoute element={<ConfirmationPaiement />} />} />
-                <Route path="*" element={<Navigate to="/" />} /> {/* Redirection automatique */}
-              </Routes>
-            </main>
-          </div>
-        </AuthWrapper>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginForm />} />
+        
+        <Route element={<PrivateRoute />}>
+          <Route path="/" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Home />
+              </main>
+            </div>
+          } />
+          <Route path="/services" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <OpenMachine />
+              </main>
+            </div>
+          } />
+          <Route path="/dashboard" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Dashboard />
+              </main>
+            </div>
+          } />
+          <Route path="/facturation" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Facturation />
+              </main>
+            </div>
+          } />
+          <Route path="/commande" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Commande />
+              </main>
+            </div>
+          } />
+          <Route path="/informations" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Informations />
+              </main>
+            </div>
+          } />
+          <Route path="/support" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <Support />
+              </main>
+            </div>
+          } />
+          <Route path="/confirmation-paiement" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <ConfirmationPaiement />
+              </main>
+            </div>
+          } />
+          <Route path="/machine" element={
+            <div className="app-container">
+              <Sidebar />
+              <main className="main-content">
+                <OpenMachine />
+              </main>
+            </div>
+          } />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

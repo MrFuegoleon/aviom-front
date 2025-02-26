@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // Importe tes méthodes pour accéder à la base de données (ex: via MariaDB)
 const { findUserByUsername } = require('./db'); // Exemple d'une fonction de recherche
 
-/*
+
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
@@ -23,7 +23,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
-*/
+/*
 
 passport.use(new LocalStrategy(
   async (username, password, done) => {
@@ -43,5 +43,6 @@ passport.use(new LocalStrategy(
   }
 ));
 
+*/
 
 module.exports = passport;

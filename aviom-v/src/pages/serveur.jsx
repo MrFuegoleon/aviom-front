@@ -20,15 +20,7 @@ const Serveur = () => {
   const [configType, setConfigType] = useState("");
 
   // Fetch packs data on component mount
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/packs")
-      .then(response => {
-        setPacks(response.data);
-      })
-      .catch(error => {
-        console.error("❌ Erreur lors de la récupération des packs :", error);
-      });
-  }, []);
+
 
   // Event handlers
   const handleCreateClick = () => setShowForm(true);

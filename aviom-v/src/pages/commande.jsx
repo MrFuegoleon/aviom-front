@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 import DomainEditor from "../components/DomaineEditor/DomaineEdit";
+import './commande.css'
 
 const DomainManagement = () => {
   const [domains, setDomains] = useState([

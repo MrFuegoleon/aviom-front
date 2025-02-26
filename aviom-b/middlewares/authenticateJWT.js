@@ -5,22 +5,24 @@ const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (authHeader) {
-    // Le format attendu est "Bearer <token>"
+    // Token format "Bearer <token>"
     const token = authHeader.split(' ')[1];
-    console.log(token);
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
-        // Token invalide ou expiré
+        // Token invalid or out to date
         return res.status(403).json({ message: 'Token invalide ou expiré' });
       }
-      // Token valide, on peut attacher les informations à la requête
+      // Token valid
       req.user = decoded;
+      console.log(req.user);
       next();
     });
   } else {
-    // Pas de token fourni
+    // no token
     res.status(401).json({ message: 'Token manquant' });
   }
 };
 
 module.exports = authenticateJWT;
+
+

@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import CloudDashboard from "../components/CloudDashboard/cloudDashboard";
 import "./dashboard.css";
-import { useAuth } from "../hooks/useAuth";
 
 const Dashboard = () => {
   // Données dynamiques pour le header
@@ -17,7 +16,6 @@ const Dashboard = () => {
     title: "Tableau de Bord Aviom",
     description: "Explorez vos données en temps réel et prenez des décisions éclairées.",
   };
-  const { logout } = useAuth();
 
   // Logs système
   const [logs, setLogs] = useState([
@@ -78,10 +76,7 @@ const Dashboard = () => {
           <h1>{headerData.title}</h1>
           <p>{headerData.description}</p>
         </div>
-        <div className="header-icons">
-        <button className="logout-button" onClick={logout}>🔒 Se Déconnecter</button>
-          <NotificationBell />
-        </div>
+
       </motion.header>
 
       {/* Contenu principal avec effet cascade */}

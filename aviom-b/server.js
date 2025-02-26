@@ -30,7 +30,6 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 
 
-// 📌 Ajout du middleware Keycloak
 app.use(session({
   secret: process.env.SESSION_SECRET || "some-secret-key",
   resave: false,
@@ -40,7 +39,7 @@ app.use(session({
 
 app.use('/api/auth', authRoutes);
 app.use('/api/protected', protectedRoutes);
-app.use("/api/openstack",authenticateJWT, openstackRoutes);
+app.use("/api/openstack", openstackRoutes);
 app.use("/api/gocardless", gocardlessRoutes);
 app.use("/api/paypal", paypalRoutes);
 app.use("/api/exchange-token", exchangeTokenRoutes);
