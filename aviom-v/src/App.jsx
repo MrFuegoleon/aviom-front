@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./components/loginForm";
 import Home from "./pages/home";
-import Services from "./pages/serveur";
+import Serveur from "./pages/services.jsx";
 import Dashboard from "./pages/dashboard";
 import Facturation from "./pages/facturation";
 import Commande from "./pages/commande";
@@ -33,7 +33,7 @@ function App() {
             <div className="app-container">
               <Sidebar />
               <main className="main-content">
-                <OpenMachine />
+                <Serveur />
               </main>
             </div>
           } />

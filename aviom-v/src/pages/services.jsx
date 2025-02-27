@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import MachineDetails from "../components/MachineData/machine";
 import PaymentOptions from "./PaymentOptions";
 import  "./serveur.css";
 
@@ -12,15 +11,22 @@ const Serveur = () => {
   const [serverName, setServerName] = useState("");
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
-  const [machines, setMachines] = useState([]);
-  const [message, setMessage] = useState('');
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [packs, setPacks] = useState([]);
   const [showConfigModal, setShowConfigModal] = useState(false);
   const [configType, setConfigType] = useState("");
+  const [flexPricing, setFlexPricing] = useState({});
 
   // Fetch packs data on component mount
-
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/packs")
+      .then(response => {
+        setPacks(response.data);
+      })
+      .catch(error => {
+        console.error("❌ Erreur lors de la récupération des packs :", error);
+      });
+  }, []);
 
   // Event handlers
   const handleCreateClick = () => setShowForm(true);
@@ -69,15 +75,109 @@ const Serveur = () => {
     setShowConfigModal(false);
   };
 
-  // Helper function to calculate price based on configuration
-  const calculatePrice = (config) => {
-    // This is a simple example, adjust according to your pricing model
-    const cpuPrice = config.cpu * 10;
-    const ramPrice = config.ram * 5;
-    const ssdPrice = config.ssd * 0.5;
-    return `${cpuPrice + ramPrice + ssdPrice}€/mois`;
-  };
+  
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/Flex")
+      .then(response => {
+        const pricingData = {};
+        response.data.forEach(item => {
+          pricingData[item.nom] = item.prix;  // Stocker les prix par type de ressource
+        });
+        setFlexPricing(pricingData);
+      })
+      .catch(error => {
+        console.error("❌ Erreur lors de la récupération des tarifs Flex :", error);
+      });
+  }, []);
+  const [flexConfig, setFlexConfig] = useState({ cpu: 4, ram: 4, hdd: 100, ip: 1 });
 
+
+  const handleFlexChange = (e, type) => {
+    let newValue = e.target.value.trim() === "" ? 0 : parseInt(e.target.value); // Convertir vide en 0
+    setFlexConfig(prev => ({ ...prev, [type]: newValue }));
+  };
+  
+  useEffect(() => {
+    updatePrice();
+  }, [flexConfig]); // Appelle `updatePrice()` à chaque fois que `flexConfig` change
+    
+  const updatePrice = () => {
+    if (Object.keys(flexPricing).length === 0) return; // Vérifier si les prix sont chargés
+  
+    const cpuPrice = flexPricing["CPU"] || 5;
+    const ramPrice = flexPricing["RAM"] || 5;
+    const hddPrice = flexPricing["HDD"] || 5;
+    const ipPrice = flexPricing["Adress IP"] || 5;
+  
+    const total = 
+      ((flexConfig.cpu || 0) * cpuPrice) + 
+      ((flexConfig.ram || 0) * ramPrice) + 
+      ((flexConfig.hdd || 0) / 100 * hddPrice) + 
+      ((flexConfig.ip || 0) * ipPrice);
+    
+    document.getElementById("flex-price").textContent = `${total.toFixed(2)}€/mois`;
+    // 🔹 Mise à jour de la recommandation juste après le calcul du prix
+    document.getElementById("flex-recommendation").innerHTML = recommendPack();
+  };
+  const recommendPack = () => {
+    if (packs.length === 0 || Object.keys(flexPricing).length === 0) return null; // 🔹 Ne retourne rien si les données ne sont pas prêtes
+
+    // 🔹 Calcul du prix total basé sur Flex
+    const flexTotalPrice =
+        ((flexConfig.cpu || 0) * (flexPricing["CPU"] || 5)) +
+        ((flexConfig.ram || 0) * (flexPricing["RAM"] || 5)) +
+        ((flexConfig.hdd || 0) / 100 * (flexPricing["HDD"] || 5)) +
+        ((flexConfig.ip || 0) * (flexPricing["Adress IP"] || 5));
+
+    let eligiblePacks = []; // 🔹 Liste des packs qui passent la Condition 2
+
+    let atLeastOnePackValid = false; // 🔹 Vérifie si au moins un pack passe la Condition 1
+
+    for (const pack of packs) {
+        const packTotalPrice = pack.tarif;  // ✅ Utiliser directement le prix du pack en BDD
+
+        // 🔹 Condition 1 : Vérifier que Prix Flex ≥ 80% du Prix du Pack
+        if (flexTotalPrice < packTotalPrice * 0.8) continue; // ❌ Si aucun pack ne passe ce test, on ne recommande rien
+        
+        atLeastOnePackValid = true; // ✅ Un pack passe la condition de prix, donc on continue avec la Condition 2
+
+        // 🔹 Condition 2 : Vérifier que chaque ressource du pack est ≥ 80% des ressources demandées
+        const ramOK = (pack.ram >= flexConfig.ram * 0.8);
+        const cpuOK = (pack.cpu >= flexConfig.cpu * 0.8);
+        const hddOK = (pack.hdd >= flexConfig.hdd * 0.8);
+        const ipOK = (pack.Adresse_IP >= flexConfig.ip * 0.8);
+
+        if (ramOK && cpuOK && hddOK && ipOK) {
+            eligiblePacks.push({ pack, packTotalPrice });
+        }
+    }
+
+    // 🔹 Si aucun pack ne valide la Condition 1, on retourne `null` (aucun message d'erreur affiché)
+    if (!atLeastOnePackValid) return null;
+
+    // 🔹 Si aucun pack ne valide la Condition 2, on ne retourne rien non plus
+    if (eligiblePacks.length === 0) return null;
+
+    // 🔹 Sélectionner le pack le MOINS CHER parmi les éligibles
+    const bestPack = eligiblePacks.reduce((prev, current) => 
+        current.packTotalPrice < prev.packTotalPrice ? current : prev
+    );
+
+    const savings = flexTotalPrice - bestPack.packTotalPrice;
+
+    return `
+        <div style="padding:10px; background-color:#e6f2ff; border-radius:5px;">
+            💡 Nous vous recommandons le pack <strong>${bestPack.pack.nom}</strong> (${bestPack.packTotalPrice.toFixed(2)}€/mois).
+            <br> 
+        </div>
+    `;
+};
+
+
+
+
+  
+      
   // Helper function to get color based on config type
   const getColorForConfig = (type) => {
     switch(type) {
@@ -89,18 +189,6 @@ const Serveur = () => {
     }
   };
 
-  const handleActionClick = () => {
-    axios.post('/api/create-vm')
-      .then(response => {
-        setMessage('Machine créée avec succès');
-        const newMachine = response.data.data;
-        setMachines(prevMachines => [...prevMachines, newMachine]);
-      })
-      .catch(error => {
-        setMessage('Erreur lors de la création de la machine');
-        console.error('Erreur:', error.response ? error.response.data : error.message);
-      });
-  };
 
   const handleSubmitBillingForm = (e) => {
     e.preventDefault();
@@ -108,28 +196,42 @@ const Serveur = () => {
     // Add form submission logic here
   };
 
-  // Render components based on state
-  const renderPacksTable = () => (
-    <table className="packs-table">
-      <tbody>
-        {packs.map((pack) => (
-          <tr key={pack.id}>
-            <td>{pack.id}</td>
-            <td>{pack.nom}</td>
-            <td>{pack.cpu}</td>
-            <td>{pack.ram}</td>
-            <td>{pack.hdd}</td>
-            <td>{pack.tarif}</td>
-            <td>
-              <button className="select-button" onClick={() => handleButtonClick(pack.id)}>
-                Sélectionner
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+// Render components based on state
+const renderPacksTable = () => (
+  <table className="packs-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>CPU (coeurs)</th>
+        <th>RAM (Go)</th>
+        <th>HDD (To)</th>
+        <th>Adresse IP</th>
+        <th>Prix (€)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {packs.map((pack) => (
+        <tr key={pack.id}>
+          <td>{pack.id}</td>
+          <td>{pack.nom}</td>
+          <td>{pack.cpu}</td>
+          <td>{pack.ram}</td>
+          <td>{pack.hdd}</td>
+          <td>{pack.Adresse_IP}</td>
+          <td>{pack.tarif}</td>
+          <td>
+            <button className="select-button" onClick={() => handleCreateButtonClick(pack.id)}>
+              Sélectionner
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
 
   const renderBillingForm = () => (
     <div className="register-container">
@@ -325,107 +427,157 @@ const Serveur = () => {
           </div>
         )}
 
-        {selectedConfig === "ajout-vm" && (
-          <div className="config-details">
-            <h5>Ajout des Machines Virtuelles</h5>
-            <table className="config-table">
-              <thead>
-                <tr>
-                  <th>Critère</th>
-                  <th>VM STARTER</th>
-                  <th>VM BOOSTER</th>
-                  <th>VM POWER</th>
-                  <th>VM MONSTER</th>
-                  <th>VM PRO</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Nombre de coeurs</td>
-                  <td>1 x 2,4 GHz</td>
-                  <td>1 x 2,4 GHz</td>
-                  <td>2 x 2,4 GHz</td>
-                  <td>4 x 2,4 GHz</td>
-                  <td>1 à 4 x 2,4 GHz</td>
-                </tr>
-                <tr>
-                  <td>Mémoire RAM</td>
-                  <td>1 Go</td>
-                  <td>2 Go</td>
-                  <td>4 Go</td>
-                  <td>8 Go</td>
-                  <td>1 à 8 Go</td>
-                </tr>
-                <tr>
-                  <td>Espace disque</td>
-                  <td>10 Go</td>
-                  <td>10 Go</td>
-                  <td>10 Go</td>
-                  <td>10 Go</td>
-                  <td>10 Go</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-
+        {selectedConfig === "ajout-vm" && renderPacksTable()}
         {selectedConfig === "flex" && (
           <div className="config-details">
             <h5>Flex - Configuration</h5>
-            <table className="config-table" style={{ width: '100%', borderCollapse: 'collapse', margin: '20px 0' }}>
+            <table className="config-table" 
+              style={{ 
+                width: '100%', 
+                borderCollapse: 'collapse', 
+                margin: '20px 0', 
+                borderRadius: '10px', 
+                overflow: 'hidden', 
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' 
+              }}
+            >
               <thead>
-                <tr>
-                  <th style={{ padding: '10px', backgroundColor: '#f4f4f4', textAlign: 'left', fontWeight: 'bold' }}>Critère</th>
-                  <th style={{ padding: '10px', backgroundColor: '#f4f4f4', textAlign: 'left', fontWeight: 'bold' }}>Valeur</th>
+                <tr style={{ background: 'linear-gradient(to right, #007bff, #34bede)', color: '#fff' }}>
+                <th style={{ padding: '15px', textAlign: 'center', fontWeight: 'bold', color: 'black' 
+                }}>Critère</th>
+
+              <th style={{ padding: '15px',textAlign: 'center', fontWeight: 'bold', color: 'black'
+              }}>Valeur</th>
+
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>CPU</td>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                {/* CPU */}
+                <tr style={{ backgroundColor: '#f9f9f9', transition: 'background 0.3s' }}>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', fontWeight: 'bold' }}>CPU</td>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', display: 'flex', alignItems: 'center' }}>
                     <input
-                      type="range"
+                      type="number"
                       min="1"
-                      max="24"
-                      defaultValue="4"
+                      max="192"
+                      value={flexConfig.cpu}
                       step="1"
-                      onInput={(e) => e.target.nextElementSibling.textContent = `${e.target.value} vCores`}
-                      style={{ width: '100%', marginBottom: '10px' }}
+                      onChange={(e) => handleFlexChange(e, "cpu")}
+                      style={{
+                        width: '80px',
+                        textAlign: 'center',
+                        marginRight: '10px',
+                        padding: '8px',
+                        border: '2px solid #007bff',
+                        borderRadius: '5px',
+                        fontSize: '16px',
+                        transition: '0.3s',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => e.target.style.border = '2px solid #34bede'}
+                      onBlur={(e) => e.target.style.border = '2px solid #007bff'}
                     />
-                    <span>4 vCores</span>
+                    <span style={{ fontSize: '16px', fontWeight: 'bold' }}>vCores</span>
                   </td>
                 </tr>
-                <tr>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>RAM</td>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+
+                {/* RAM */}
+                <tr style={{ backgroundColor: '#ffffff', transition: 'background 0.3s' }}>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', fontWeight: 'bold' }}>RAM</td>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', display: 'flex', alignItems: 'center' }}>
                     <input
-                      type="range"
-                      min="0.5"
+                      type="number"
+                      min="1"
+                      max="3000"
+                      value={flexConfig.ram}
+                      step="1"
+                      onChange={(e) => handleFlexChange(e, "ram")}
+                      style={{
+                        width: '80px',
+                        textAlign: 'center',
+                        marginRight: '10px',
+                        padding: '8px',
+                        border: '2px solid #007bff',
+                        borderRadius: '5px',
+                        fontSize: '16px',
+                        transition: '0.3s',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => e.target.style.border = '2px solid #34bede'}
+                      onBlur={(e) => e.target.style.border = '2px solid #007bff'}
+                    />
+                    <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Go</span>
+                  </td>
+                </tr>
+
+                {/* HDD */}
+                <tr style={{ backgroundColor: '#f9f9f9', transition: 'background 0.3s' }}>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', fontWeight: 'bold' }}>HDD</td>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', display: 'flex', alignItems: 'center' }}>
+                    <input
+                      type="number"
+                      min="100"
+                      max="47000"
+                      value={flexConfig.hdd}
+                      step="100"
+                      onChange={(e) => handleFlexChange(e, "hdd")}
+                      style={{
+                        width: '80px',
+                        textAlign: 'center',
+                        marginRight: '10px',
+                        padding: '8px',
+                        border: '2px solid #007bff',
+                        borderRadius: '5px',
+                        fontSize: '16px',
+                        transition: '0.3s',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => e.target.style.border = '2px solid #34bede'}
+                      onBlur={(e) => e.target.style.border = '2px solid #007bff'}
+                    />
+                    <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Go</span>
+                  </td>
+                </tr>
+
+                {/* Adresse IP */}
+                <tr style={{ backgroundColor: '#ffffff', transition: 'background 0.3s' }}>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', fontWeight: 'bold' }}>Adresse IP</td>
+                  <td style={{ padding: '15px', border: '1px solid #ddd', display: 'flex', alignItems: 'center' }}>
+                    <input
+                      type="number"
+                      min="1"
                       max="128"
-                      defaultValue="4"
-                      step="0.5"
-                      onInput={(e) => e.target.nextElementSibling.textContent = `${e.target.value} Go`}
-                      style={{ width: '100%', marginBottom: '10px' }}
+                      value={flexConfig.ip}
+                      step="1"
+                      onChange={(e) => handleFlexChange(e, "ip")}
+                      style={{
+                        width: '80px',
+                        textAlign: 'center',
+                        marginRight: '10px',
+                        padding: '8px',
+                        border: '2px solid #007bff',
+                        borderRadius: '5px',
+                        fontSize: '16px',
+                        transition: '0.3s',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => e.target.style.border = '2px solid #34bede'}
+                      onBlur={(e) => e.target.style.border = '2px solid #007bff'}
                     />
-                    <span>4 Go</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>SSD</td>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                    <input
-                      type="range"
-                      min="10"
-                      max="500"
-                      defaultValue="100"
-                      onInput={(e) => e.target.nextElementSibling.textContent = `${e.target.value} Go`}
-                      style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                    <span>100 Go</span>
+                    <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Adresse(s) IP</span>
                   </td>
                 </tr>
               </tbody>
             </table>
+
+            <div className="flex-price-container" style={{ marginTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h4 style={{ fontWeight: "bold" }}>Prix Total : <span id="flex-price">0€/mois</span></h4>
+              <button className="order-button" style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }} onClick={handleCreateButtonClick}>
+                Commander
+              </button>
+            </div>
+            <div id="flex-recommendation" style={{ marginTop: "10px", fontWeight: "bold", color: "#007bff" }}>
+            </div>
           </div>
         )}
       </div>
@@ -486,30 +638,18 @@ const Serveur = () => {
         </tbody>
       </table>
       
-      {message && <p className="message">{message}</p>}
-      
-      <div className="machines-list">
-        {machines.length === 0 ? (
-          <p>Aucune machine créée pour l'instant.</p>
-        ) : (
-          machines.map((machine, index) => {
-            if (!machine) return null;
-            return <MachineDetails key={machine.id || index} machine={machine} />;
-          })
-        )}
-      </div>
     </>
   );
 
   return (
     <div className="serveur-container">
       <header className="serveur-header">
-        {renderPacksTable()}
+        
         <div className="actions">
           <button className="create-button" onClick={handleCreateClick}>
             Actions
           </button>
-          <button className="action-button" onClick={handleActionClick}>
+          <button className="action-button">
             Créer
           </button>
           <button className="action-button">
