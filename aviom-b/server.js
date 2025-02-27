@@ -16,6 +16,8 @@ const exchangeTokenRoutes = require('./routes/exchangeToken.js');
 const logoutRoutes = require('./routes/logout');
 const authRoutes = require('./routes/login');
 const protectedRoutes = require('./routes/protected');
+const sseRoutes = require('./routes/sse.js');
+
 
 
 const app = express();
@@ -38,6 +40,7 @@ app.use(session({
 }));
 
 app.use('/api/auth', authRoutes);
+app.use("/api/sse", sseRoutes);
 app.use('/api/protected', protectedRoutes);
 app.use("/api/openstack", openstackRoutes);
 app.use("/api/gocardless", gocardlessRoutes);

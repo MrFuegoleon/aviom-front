@@ -8,7 +8,7 @@ const { findUserByUsername } = require('./db'); // Exemple d'une fonction de rec
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
-      const user = await findUserByUsername(username); // Récupère l'utilisateur depuis la BDD
+      const user = await findUserByUsername(username); // 
       if (!user) {
         return done(null, false, { message: 'Utilisateur non trouvé' });
       }

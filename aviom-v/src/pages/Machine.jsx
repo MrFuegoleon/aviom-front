@@ -1,8 +1,10 @@
+// src/OpenMachine.jsx
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from '../axiosConfig';
-
+import VmRow from '../components/VmRow'
+import LogoutButton from '../components/logout';
 const API_BASE = '/api/openstack';
 
 function OpenMachine() {
@@ -11,12 +13,10 @@ function OpenMachine() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const [showResize, setShowResize] = useState(false);
-  const [showConfirmResize, setShowConfirmResize] = useState(false);
+
   const [vmName, setVmName] = useState('');
   const [selectedVm, setSelectedVm] = useState(null);
   const [selectedFlavor, setSelectedFlavor] = useState('');
-  const [resizeStatus, setResizeStatus] = useState(null);
   const [activeActions, setActiveActions] = useState({});
 
   useEffect(() => {
@@ -24,16 +24,15 @@ function OpenMachine() {
     fetchFlavors();
   }, []);
 
-  
-
   const fetchVms = async () => {
     try {
       setLoading(true);
       const { data } = await api.get(`${API_BASE}/list-vms`);
       setVms(data.data);
+      console.log(data.data);
       setError('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur de chargement des VMs');
+      setError(err.response?.data?.message || 'Error loading VMs');
     } finally {
       setLoading(false);
     }
@@ -44,13 +43,13 @@ function OpenMachine() {
       const { data } = await api.get(`${API_BASE}/flavors`);
       setFlavors(data.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur de chargement des flavors');
+      setError(err.response?.data?.message || 'Error loading flavors');
     }
   };
 
   const handleCreateVm = async () => {
     if (!selectedFlavor) {
-      setError("Veuillez sélectionner un flavor !");
+      setError("Please select a flavor!");
       return;
     }
 
@@ -65,29 +64,7 @@ function OpenMachine() {
       setVmName('');
       setSelectedFlavor('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur de création');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResize = async () => {
-    try {
-      setLoading(true);
-      const flavor = flavors.find(f => f.id === selectedFlavor);
-      if (!flavor) throw new Error("Flavor introuvable");
-
-      await api.put(`${API_BASE}/resize-vm/${selectedVm.id}`, {
-        ram: flavor.ram,
-        vcpus: flavor.vcpus,
-        disk: flavor.disk
-      });
-
-      setResizeStatus({ status: 'PENDING', vmId: selectedVm.id });
-      setShowConfirmResize(true);
-      setShowResize(false);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Erreur de redimensionnement');
+      setError(err.response?.data?.message || 'Creation error');
     } finally {
       setLoading(false);
     }
@@ -95,211 +72,133 @@ function OpenMachine() {
 
   const handleVmAction = async (action, vmId, data) => {
     try {
+      // Mark action as active for this VM so that the spinner shows.
       setActiveActions(prev => ({ ...prev, [vmId]: true }));
+  
+      // Get the initial status from your local state (fetched via fetchVms)
+      const initialVm = vms.find(vm => vm.id === vmId);
+      const initialStatus = initialVm ? initialVm.status : null;
+  
+      // Trigger the action (start, stop, reboot, etc.)
       const endpoint = action === 'delete' ? api.delete : api.post;
       await endpoint(`${API_BASE}/${action}-vm/${vmId}`, data);
-      await fetchVms();
+  
+      // Start polling for status change every 3 seconds.
+      let attempts = 0;
+      const maxAttempts = 20; // For example, wait up to 60 seconds.
+      const pollInterval = setInterval(async () => {
+        attempts++;
+        try {
+          // Fetch the updated status of the VM.
+          // Adjust this endpoint if necessary.
+          const { data: vmData } = await api.get(`${API_BASE}/servers/${vmId}`);
+          // If your API returns the VM details inside "server":
+          const updatedStatus = vmData.server ? vmData.server.status : vmData.status;
+          
+          // If the status has changed from the initial status, clear the spinner.
+          if (updatedStatus && updatedStatus !== initialStatus) {
+            clearInterval(pollInterval);
+            setActiveActions(prev => ({ ...prev, [vmId]: false }));
+          } else if (attempts >= maxAttempts) {
+            // If max attempts reached, clear the spinner to avoid an infinite spinner.
+            clearInterval(pollInterval);
+            setActiveActions(prev => ({ ...prev, [vmId]: false }));
+          }
+        } catch (pollErr) {
+          console.error("Polling error:", pollErr);
+        }
+      }, 3000); // Poll every 3 seconds.
     } catch (err) {
-      setError(err.response?.data?.message || `Erreur ${action}`);
-    } finally {
+      setError(err.response?.data?.message || `Error during ${action}`);
       setActiveActions(prev => ({ ...prev, [vmId]: false }));
     }
   };
+  
+
 
   return (
-    <div>
-        <div className="container mt-4">
-          <h1 className="mb-4">Gestion des VMs OpenStack</h1>
+    <div className="container mt-4">
+      <LogoutButton/>
+      <h1 className="mb-4">OpenStack VM Management</h1>
 
-          {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
+      {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
-          <div className="mb-3">
-            <Button variant="primary" onClick={() => setShowCreate(true)} disabled={loading}>
-              {loading ? <Spinner size="sm" animation="border" /> : 'Créer une VM'}
-            </Button>
-          </div>
+      <div className="mb-3">
+        <Button variant="primary" onClick={() => setShowCreate(true)} disabled={loading}>
+          {loading ? <Spinner size="sm" animation="border" /> : 'Create VM'}
+        </Button>
+      </div>
 
-          {loading ? (
-            <div className="text-center">
-              <Spinner animation="border" />
-            </div>
-          ) : (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nom</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vms.map(vm => (
-                  <tr key={vm.id}>
-                    <td>{vm.id}</td>
-                    <td>{vm.name}</td>
-                    <td>{vm.status}</td>
-                    <td>
-                      <Button 
-                        variant="success" 
-                        className="me-2"
-                        onClick={() => handleVmAction('start', vm.id)}
-                        disabled={vm.status === 'ACTIVE' || activeActions[vm.id]}
-                      >
-                        {activeActions[vm.id] ? <Spinner size="sm" animation="border" /> : 'Démarrer'}
-                      </Button>
-                      <Button 
-                        variant="warning" 
-                        className="me-2"
-                        onClick={() => handleVmAction('stop', vm.id)}
-                        disabled={vm.status !== 'ACTIVE' || activeActions[vm.id]}
-                      >
-                        {activeActions[vm.id] ? <Spinner size="sm" animation="border" /> : 'Arrêter'}
-                      </Button>
-                      <Button 
-                        variant="secondary" 
-                        className="me-2"
-                        onClick={() => {
-                          const type = window.confirm("Forcer le redémarrage (HARD) ?") ? "HARD" : "SOFT";
-                          handleVmAction('reboot', vm.id, { type });
-                        }}
-                        disabled={vm.status !== 'ACTIVE' || activeActions[vm.id]}
-                      >
-                        {activeActions[vm.id] ? <Spinner size="sm" animation="border" /> : 'Redémarrer'}
-                      </Button>
-                      <Button 
-                        variant="info" 
-                        className="me-2"
-                        onClick={() => {
-                          setSelectedVm(vm);
-                          setShowResize(true);
-                        }}
-                        disabled={activeActions[vm.id]}
-                      >
-                        Redimensionner
-                      </Button>
-                      <Button 
-                        variant="danger"
-                        onClick={() => handleVmAction('delete', vm.id)}
-                        disabled={activeActions[vm.id]}
-                      >
-                        {activeActions[vm.id] ? <Spinner size="sm" animation="border" /> : 'Supprimer'}
-                      </Button>
-                    </td>
-                  </tr>
+      {loading ? (
+        <div className="text-center">
+          <Spinner animation="border" />
+        </div>
+      ) : (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vms.map(vm => (
+              <VmRow 
+                key={vm.id}
+                vm={vm}
+                handleVmAction={handleVmAction}
+                activeAction={activeActions[vm.id]}
+              />
+            ))}
+          </tbody>
+        </Table>
+      )}
+
+      {/* Create VM Modal */}
+      <Modal show={showCreate} onHide={() => setShowCreate(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create VM</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>VM Name</Form.Label>
+              <Form.Control 
+                type="text" 
+                value={vmName}
+                onChange={(e) => setVmName(e.target.value)}
+                placeholder="Enter a VM name"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Select a Flavor</Form.Label>
+              <Form.Select 
+                value={selectedFlavor}
+                onChange={(e) => setSelectedFlavor(e.target.value)}
+              >
+                <option value="">Select a flavor</option>
+                {flavors.map(flavor => (
+                  <option key={flavor.id} value={flavor.id}>
+                    {flavor.name} - {flavor.vcpus} vCPUs, {flavor.ram} MB RAM, {flavor.disk} GB Disk
+                  </option>
                 ))}
-              </tbody>
-            </Table>
-          )}
-
-          {/* Modal de création */}
-          <Modal show={showCreate} onHide={() => setShowCreate(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Créer une VM</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3">
-                  <Form.Label>Nom de la VM</Form.Label>
-                  <Form.Control 
-                    type="text" 
-                    value={vmName}
-                    onChange={(e) => setVmName(e.target.value)}
-                    placeholder="Entrez un nom pour la VM"
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Choisir un flavor</Form.Label>
-                  <Form.Select 
-                    value={selectedFlavor}
-                    onChange={(e) => setSelectedFlavor(e.target.value)}
-                  >
-                    <option value="">Sélectionner un flavor</option>
-                    {flavors.map(flavor => (
-                      <option key={flavor.id} value={flavor.id}>
-                        {flavor.name} - {flavor.vcpus} vCPUs, {flavor.ram}MB RAM, {flavor.disk}GB Disk
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowCreate(false)}>
-                Annuler
-              </Button>
-              <Button variant="primary" onClick={handleCreateVm} disabled={!selectedFlavor}>
-                Créer
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-          {/* Modal de redimensionnement */}
-          <Modal show={showResize} onHide={() => setShowResize(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Redimensionner {selectedVm?.name}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3">
-                  <Form.Label>Choisir un nouveau flavor</Form.Label>
-                  <Form.Select 
-                    value={selectedFlavor}
-                    onChange={(e) => setSelectedFlavor(e.target.value)}
-                  >
-                    <option value="">Sélectionner un flavor</option>
-                    {flavors.map(flavor => (
-                      <option key={flavor.id} value={flavor.id}>
-                        {flavor.name} - {flavor.vcpus} vCPUs, {flavor.ram}MB RAM, {flavor.disk}GB Disk
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowResize(false)}>
-                Annuler
-              </Button>
-              <Button variant="primary" onClick={handleResize} disabled={!selectedFlavor}>
-                Redimensionner
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-          {/* Modal de confirmation de redimensionnement */}
-          <Modal show={showConfirmResize} onHide={() => setShowConfirmResize(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Confirmer le redimensionnement</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <p>Le redimensionnement est en attente de confirmation</p>
-              <p>Que souhaitez-vous faire ?</p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="danger" onClick={async () => {
-                await api.post(`${API_BASE}/revert-resize/${resizeStatus.vmId}`);
-                setShowConfirmResize(false);
-                await fetchVms();
-              }}>
-                Annuler
-              </Button>
-              <Button variant="success" onClick={async () => {
-                await api.post(`${API_BASE}/confirm-resize/${resizeStatus.vmId}`);
-                setShowConfirmResize(false);
-                await fetchVms();
-              }}>
-                Confirmer
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-          
-        </div>
-        </div>
-    
-      );
-    }
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreate(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleCreateVm} disabled={!selectedFlavor}>
+            Create
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
+}
 
 export default OpenMachine;
-

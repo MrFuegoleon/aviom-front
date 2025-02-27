@@ -315,5 +315,31 @@ router.post("/revert-resize/:id",authenticateJWT, async (req, res) => {
 });
 
 
+router.get('/servers/:vmId',authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
+  try {
+    const token = await getAuthToken(projectId);
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token missing' });
+    }
+
+    const vmId = req.params.vmId;
+    
+    // Request VM details from the Nova API
+    const response = await axios.get(`${OS_NOVA_URL}/servers/${vmId}`, {
+      headers: {
+        "X-Auth-Token": token,
+        "Content-Type": "application/json"
+      }
+    });
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching VM details:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({ error: error.response?.data || error.message });
+  }
+});
 
 module.exports = router;
