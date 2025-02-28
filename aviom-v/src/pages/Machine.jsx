@@ -1,10 +1,9 @@
-// src/OpenMachine.jsx
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from '../axiosConfig';
+import { useNavigate } from "react-router-dom";
 import VmRow from '../components/VmRow'
-import LogoutButton from '../components/logout';
 const API_BASE = '/api/openstack';
 
 function OpenMachine() {
@@ -13,16 +12,52 @@ function OpenMachine() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-
   const [vmName, setVmName] = useState('');
   const [selectedVm, setSelectedVm] = useState(null);
   const [selectedFlavor, setSelectedFlavor] = useState('');
   const [activeActions, setActiveActions] = useState({});
+  const [userPacks, setUserPacks] = useState({ eco: 0, duo: 0, trio: 0, flex: 0 });
+  const [hasPack, setHasPack] = useState(false);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    // Fetch user profile data from the backend.
+    api.get("/api/machine")
+      .then(response => {
+        const { eco, duo, trio, flex } = response.data;
+        console.log("Response from /api/machine:", response.data);
+  
+        setUserPacks({ eco, duo, trio, flex });
+        // Determine if the user has any pack
+        if (eco === 1 || duo === 1 || trio === 1 || flex === 1) {
+          setHasPack(true);
+        } else {
+          setHasPack(false);
+          // Show a popup before redirecting
+          const shouldRedirect = window.confirm(
+            "You don't have any pack. Would you like to go to the Services page to purchase one?"
+          );
+          if (shouldRedirect) {
+            navigate("/createProject");
+          } else {
+            navigate("/dashboard");
+          }
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching user profile:", error);
+      });
+    fetchVms();
+    fetchFlavors();
+  }, []);
 
   useEffect(() => {
     fetchVms();
     fetchFlavors();
   }, []);
+  
+  
 
   const fetchVms = async () => {
     try {
@@ -118,7 +153,6 @@ function OpenMachine() {
 
   return (
     <div className="container mt-4">
-      <LogoutButton/>
       <h1 className="mb-4">OpenStack VM Management</h1>
 
       {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}

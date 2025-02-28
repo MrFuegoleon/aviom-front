@@ -11,9 +11,6 @@ const OS_DOMAIN_ID = process.env.OS_DOMAIN_ID;
 
 const OS_NOVA_URL = process.env.OS_NOVA_URL;
 
-const KEYPAIR_NAME = process.env.KEYPAIR_NAME;
-const KEYPAIR_FILE = process.env.KEYPAIR_FILE;
-
 //  To get a token
 async function getAuthToken(projectId) {
   console.log(projectId);

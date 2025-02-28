@@ -18,7 +18,6 @@ const KEYPAIR_FILE = process.env.KEYPAIR_FILE;
 
 //  To get a token
 async function getAuthToken(projectId) {
-  console.log(projectId);
   try {
     const authPayload = {
       auth: {
@@ -243,6 +242,7 @@ router.post("/stop-vm/:id",authenticateJWT, async (req, res) => {
 // List all VM of the project
 router.get("/list-vms",authenticateJWT, async (req, res) => {
   const projectId = req.user.project_id;
+  console.log(projectId);
 
   try {
     const token = await getAuthToken(projectId);

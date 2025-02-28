@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ProtectedPage from '../protectedPage';
 import '../../App.css';
 
 // Icônes SVG pour chaque lien (vous pouvez les remplacer par vos propres icônes)

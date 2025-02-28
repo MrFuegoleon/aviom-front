@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import LogoutButton from "../components/logout";
 import { 
   FaCloud, 
   FaChartLine, 
@@ -65,6 +66,8 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+        <LogoutButton/>
+
       {/* Header animé */}
       <motion.header
         className="dashboard-header"

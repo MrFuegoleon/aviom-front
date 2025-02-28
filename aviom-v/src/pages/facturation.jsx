@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CancelSubscriptionButton from "../components/CancelSubscriptionButton";
 
 const Facturation = () => {
   const [invoices, setInvoices] = useState([
@@ -15,6 +16,7 @@ const Facturation = () => {
         <div className="header-section">
           <h1>Facturation & Paiement</h1>
           <p>Consultez l'historique de vos paiements et gérez vos factures en toute simplicité.</p>
+          <CancelSubscriptionButton/>
         </div>
 
         {/* Summary Cards */}

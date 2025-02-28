@@ -4,6 +4,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'd1cdf1v5dggvbf1gbb1fg5';
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   let token = null;
+  console.log("Authorization Header:", req.headers.authorization);
+  console.log("Query Token:", req.query.token);
+
 
   if (authHeader && authHeader.startsWith('Bearer ')) {
     token = authHeader.split(' ')[1]; 
@@ -21,7 +24,10 @@ const authenticateJWT = (req, res, next) => {
     }
     req.user = decoded
     next();
+    console.log(token);
+    console.log(req.user);
   });
 };
+
 
 module.exports = authenticateJWT;

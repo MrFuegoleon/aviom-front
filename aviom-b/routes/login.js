@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const { pool, findUserByUsername } = require('../db');
 const bcrypt = require('bcrypt');
-
+const authenticateJWT = require("../middlewares/authenticateJWT");
 const JWT_SECRET = process.env.JWT_SECRET || 'd1cdf1v5dggvbf1gbb1fg5';
 
 /*
@@ -27,7 +27,7 @@ router.post('/login', (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err) return next(err);
     if (!user) return res.status(401).json({ message: info.message });
-    const token = jwt.sign({ id: user.id, username: user.username, project_name: user.project_name, project_id: user.project_id }, JWT_SECRET, { expiresIn: '10min' });
+    const token = jwt.sign({ id: user.id, username: user.username, project_id: user.project_id }, JWT_SECRET, { expiresIn: '1min' });
     res.json({ token });
   })(req, res, next);
 });
@@ -51,6 +51,24 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: "Erreur lors de l'inscription" });
   }
 });
+
+
+router.get('/', authenticateJWT, async (req, res) => {
+  try {
+    const projectId = req.user.project_id;
+    res.status(200).json({ message: 'Good', project_id: projectId });
+  } catch (error) {
+    console.error("Erreur:", error);
+    res.status(500).json({ message: "Erreur" });
+  }
+
+
+});
+
+router.get('/protected', authenticateJWT, (req, res) => {
+  res.json({ message: "This is a protected route.", user: req.user });
+});
+
 
 
 

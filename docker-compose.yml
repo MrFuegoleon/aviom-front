@@ -14,25 +14,6 @@ services:
       - "3305:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-
-  keycloak:
-    image: youssefsami/keycloak:latest
-    container_name: keycloak
-    restart: always
-    ports:
-      - "8080:8080"
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: localhost
-      # Cette URL sera utilisée par Keycloak pour générer ses liens publics
-      KC_FRONTEND_URL: http://localhost:8080/auth
-      KC_HTTP_RELATIVE_PATH: /auth
-
-    command: start-dev
-    volumes:
-      - keycloak_data:/opt/keycloak/data
-
   aviom-b:
     build: ./aviom-b
     container_name: aviom-b
