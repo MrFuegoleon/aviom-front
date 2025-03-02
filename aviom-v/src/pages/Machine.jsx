@@ -153,7 +153,7 @@ function OpenMachine() {
 
   return (
     <div className="container mt-4">
-      <h1 className="mb-4">OpenStack VM Management</h1>
+      <h1 className="mb-4">GERER VOS MACHINES</h1>
 
       {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 

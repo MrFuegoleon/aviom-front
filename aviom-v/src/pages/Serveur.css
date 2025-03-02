@@ -1,169 +1,233 @@
-/* Serveur.css */
-/* Base styles */
+/* serveur.css */
+
+/* Container styling */
 .serveur-container {
-  font-family: Arial, sans-serif;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
-  color: #333;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 
-/* Header styles */
+/* Header */
 .serveur-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.serveur-header {
+  display: flex;
+  justify-content: center; /* Center the actions container */
+  align-items: center;
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .actions {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  width: 100%;
+  gap: 10px; /* Optional gap between buttons */
 }
 
-.create-button,
-.action-button,
-.filter-button {
-  padding: 8px 16px;
+.actions > button {
+  flex: 1; /* Each button takes equal space (half the width if there are 2) */
+  padding: 10px 20px;
+  background-color: #007bff;
   border: none;
   border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.create-button {
-  background-color: #0275d8;
-  color: white;
-}
 
-.create-button:hover {
-  background-color: #025aa5;
-}
-
-.action-button {
-  background-color: #5bc0de;
-  color: white;
-}
-
-.action-button:hover {
-  background-color: #31b0d5;
-}
-
-.filter-button {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
+.create-button:hover,
+.action-button:hover,
 .filter-button:hover {
-  background-color: #e0e0e0;
+  background-color: #0056b3;
 }
 
-/* Packs table */
-.packs-table {
+/* Server Table */
+.serveur-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 15px;
+  background: #fff;
+  margin-bottom: 20px;
 }
 
-.packs-table td, 
-.packs-table th {
+.serveur-table th,
+.serveur-table td {
+  padding: 12px;
   border: 1px solid #ddd;
-  padding: 8px;
   text-align: left;
 }
 
-.packs-table tr:nth-child(even) {
-  background-color: #f8f8f8;
+.serveur-table th {
+  background-color: #f9fafb;
 }
 
-.packs-table tr:hover {
-  background-color: #f1f1f1;
+/* Dummy Icon Styles */
+.status-green {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+}
+
+.backup-icon,
+.os-icon,
+.data-center-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+/* Packs Table */
+.packs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #fff;
+}
+
+.packs-table th,
+.packs-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
 }
 
 .select-button {
   padding: 5px 10px;
-  background-color: #0275d8;
-  color: white;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.select-button:hover {
+  background-color: #0056b3;
+}
+
+/* Register Form */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.register-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-column label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-column input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.register-box input[type="text"],
+.register-box input[type="email"],
+.register-box input[type="tel"],
+.register-box select,
+.register-box textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Form buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.confirm-button,
+.back-button {
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.select-button:hover {
-  background-color: #025aa5;
+.confirm-button {
+  background-color: #28a745;
+  color: #fff;
 }
 
-/* Server table */
-.serveur-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+.back-button {
+  background-color: #dc3545;
+  color: #fff;
 }
 
-.serveur-table th {
-  background-color: #f2f2f2;
-  padding: 10px;
-  text-align: left;
-  font-weight: bold;
-  border: 1px solid #ddd;
+.confirm-button:hover {
+  background-color: #218838;
 }
 
-.serveur-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+.back-button:hover {
+  background-color: #c82333;
 }
 
-.serveur-table tr:hover {
-  background-color: #f5f5f5;
-}
-
-/* Status indicators */
-.status-green {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-color: #5cb85c;
-  border-radius: 50%;
-}
-
-.backup-icon, 
-.os-icon, 
-.data-center-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-}
-
-/* Form Container */
+/* Configuration Form */
 .form-container {
-  background-color: white;
-  border-radius: 8px;
+  background: #fff;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .server-name-label {
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
 .server-name-label input {
-  display: block;
   width: 100%;
   padding: 8px;
-  margin-top: 5px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-/* Configuration options */
 .configurations {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
@@ -174,310 +238,167 @@
 .config-button {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #f8f9fa;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s;
 }
 
+.config-button.active,
 .config-button:hover {
-  background-color: #e9ecef;
+  background-color: #0056b3;
 }
 
-.config-button.active {
-  background-color: #0275d8;
-  color: white;
-  border-color: #0275d8;
+.services-container {
+  margin-top: 20px;
 }
 
-/* Configuration tables */
 .config-details {
   margin-top: 20px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.config-details h5 {
-  margin: 0;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #ddd;
 }
 
 .config-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .config-table th,
 .config-table td {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
   text-align: center;
 }
 
 .config-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  background: #f9fafb;
 }
 
-/* Color classes for different plans */
-.eco {
-  background-color: #dff0d8;
-}
-
-.duo {
-  background-color: #d9edf7;
-}
-
-.trio {
-  background-color: #fcf8e3;
-}
-
-.pro {
-  background-color: #f2dede;
-}
-
-/* Create buttons */
+/* Create Buttons in Configuration */
 .create-buttons-container {
   display: flex;
-  justify-content: space-around;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-top: 1px solid #ddd;
+  gap: 10px;
+  justify-content: center;
 }
 
 .create-btn {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: #fff;
   cursor: pointer;
-  font-weight: 600;
+  transition: background-color 0.3s;
 }
 
 .create-btn.eco {
-  background-color: #5cb85c;
-  margin-left: 350px;
-}
-
-.create-btn.eco:hover {
-  background-color: #449d44;
+  background-color: #28a745;
 }
 
 .create-btn.duo {
-  background-color: #5bc0de;
-}
-
-.create-btn.duo:hover {
-  background-color: #31b0d5;
+  background-color: #007bff;
 }
 
 .create-btn.trio {
-  background-color: #f0ad4e;
-}
-
-.create-btn.trio:hover {
-  background-color: #ec971f;
+  background-color: #fd7e14;
 }
 
 .create-btn.pro {
-  background-color: #d9534f;
+  background-color: #6f42c1;
 }
 
-.create-btn.pro:hover {
-  background-color: #c9302c;
+.create-btn:hover {
+  opacity: 0.8;
 }
 
-/* Range inputs */
-input[type="range"] {
-  width: 80%;
-  margin-right: 10px;
-}
-
-/* Offer summary */
+/* Offer Summary */
 .offer-summary {
-  margin-top: 20px;
-  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 .summary-header {
-  padding: 10px 15px;
-  color: white;
-}
-
-.summary-header h5 {
-  margin: 0;
+  padding: 10px;
+  color: #fff;
+  text-align: center;
 }
 
 .summary-content {
-  padding: 15px;
-  background-color: white;
+  padding: 20px;
+}
+
+.summary-content p {
+  margin-bottom: 10px;
 }
 
 .summary-content ul {
-  padding-left: 20px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.summary-content li {
+  margin-bottom: 5px;
 }
 
 .submit-button {
   display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  background-color: #5cb85c;
-  color: white;
+  margin: 20px auto 0;
+  padding: 10px 20px;
   border: none;
+  background-color: #007bff;
+  color: #fff;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
+  transition: background-color 0.3s;
 }
 
 .submit-button:hover {
-  background-color: #449d44;
+  background-color: #0056b3;
 }
 
-.back-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.back-button:hover {
-  background-color: #e9ecef;
-}
-
-/* Message display */
-.message {
-  padding: 10px;
-  margin: 15px 0;
-  border-radius: 4px;
-  text-align: center;
-  background-color: #dff0d8;
-  border: 1px solid #d6e9c6;
-  color: #3c763d;
-}
-
-/* Machines list */
-.machines-list {
-  margin-top: 20px;
-}
-
-/* Billing Registration Form */
-.register-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+/* Flex Price Section */
+.flex-price-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  z-index: 1000;
-}
-
-.register-box {
-  background-color: white;
-  border-radius: 8px;
-  padding: 25px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.register-box h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.register-box h3 {
-  margin-top: 25px;
-  margin-bottom: 15px;
-  color: #555;
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.form-column {
-  flex: 1;
-}
-
-.register-box label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-}
-
-.register-box input,
-.register-box select,
-.register-box textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.register-box textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.form-buttons {
-  display: flex;
-  gap: 10px;
   margin-top: 20px;
 }
 
-.confirm-button {
-  flex: 1;
-  padding: 12px;
-  background-color: #5cb85c;
-  color: white;
+.order-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
+  transition: background-color 0.3s;
 }
 
-.confirm-button:hover {
-  background-color: #449d44;
+.order-button:hover {
+  background-color: #0056b3;
 }
 
-/* Responsive adjustments */
+/* Flex Recommendation */
+#flex-recommendation {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column;
-    gap: 0;
   }
-  
-  .configurations {
+  .actions {
     flex-direction: column;
-  }
-  
-  .serveur-table {
-    display: block;
-    overflow-x: auto;
-  }
-  
-  .create-buttons-container {
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
   }
 }

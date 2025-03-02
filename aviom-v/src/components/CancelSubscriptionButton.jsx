@@ -24,7 +24,7 @@ const CancelSubscriptionButton = ({ refreshUser }) => {
 
   return (
     <Button variant="danger" onClick={handleCancel}>
-      Cancel Subscription
+    Annuler l'abonnement    
     </Button>
   );
 };
