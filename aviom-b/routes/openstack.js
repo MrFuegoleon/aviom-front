@@ -1,25 +1,23 @@
 const express = require("express");
 const axios = require("axios");
 const fs = require("fs");
-
 const router = express.Router();
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
-// Configuration OpenStack
-const OS_IDENTITY_URL = "http://156.18.114.237:5000/v3"; // Endpoint Keystone (v3)
-const OS_USERNAME = "admin";
-const OS_PASSWORD = "vwURv2tz5vQQ32FmVfFYfmvW6Yds01QGgzFR10F6";
-const OS_PROJECT_NAME = "test";
-const OS_DOMAIN_ID = "default";
 
-// URL de l'API Nova
-const OS_NOVA_URL = "http://156.18.114.237:8774/v2.1";
+const OS_IDENTITY_URL = process.env.OS_IDENTITY_URL;
+const OS_USERNAME = process.env.OS_USERNAME;
+const OS_PASSWORD = process.env.OS_PASSWORD;
+// const OS_PROJECT_NAME = process.env.OS_PROJECT_NAME;
+const OS_DOMAIN_ID = process.env.OS_DOMAIN_ID;
 
-// Nom de la paire de clés
-const KEYPAIR_NAME = "mykey";
-const KEYPAIR_FILE = "mykey.pem";
+const OS_NOVA_URL = process.env.OS_NOVA_URL;
 
-//  Fonction pour obtenir un token OpenStack
-async function getAuthToken() {
+const KEYPAIR_NAME = process.env.KEYPAIR_NAME;
+const KEYPAIR_FILE = process.env.KEYPAIR_FILE;
+
+//  To get a token
+async function getAuthToken(projectId) {
   try {
     const authPayload = {
       auth: {
@@ -35,8 +33,7 @@ async function getAuthToken() {
         },
         scope: {
           project: {
-            name: OS_PROJECT_NAME,
-            domain: { id: OS_DOMAIN_ID },
+            id: projectId
           },
         },
       },
@@ -46,6 +43,7 @@ async function getAuthToken() {
       headers: { "Content-Type": "application/json" },
     });
 
+
     return response.headers["x-subject-token"];
   } catch (error) {
     console.error("Erreur d'authentification:", error.response?.data || error.message);
@@ -53,11 +51,16 @@ async function getAuthToken() {
   }
 }
 
-//  Fonction pour vérifier/créer une paire de clés
-async function ensureKeypairExists(token) {
+//  Check/Create key pair
+
+async function ensureKeypairExists(token, projectId) {
   try {
+    // Try to get the keypair by including the project id in headers (if needed)
     await axios.get(`${OS_NOVA_URL}/os-keypairs/${KEYPAIR_NAME}`, {
-      headers: { "X-Auth-Token": token },
+      headers: { 
+        "X-Auth-Token": token,
+        "X-Project-Id": projectId  // pass the project id here
+      },
     });
     console.log(`La paire de clés "${KEYPAIR_NAME}" existe déjà.`);
   } catch (err) {
@@ -66,7 +69,13 @@ async function ensureKeypairExists(token) {
       const createResponse = await axios.post(
         `${OS_NOVA_URL}/os-keypairs`,
         { keypair: { name: KEYPAIR_NAME } },
-        { headers: { "X-Auth-Token": token, "Content-Type": "application/json" } }
+        {
+          headers: { 
+            "X-Auth-Token": token, 
+            "Content-Type": "application/json",
+            "X-Project-Id": projectId  // include the project id here as well
+          }
+        }
       );
 
       const privateKey = createResponse.data.keypair.private_key;
@@ -80,16 +89,18 @@ async function ensureKeypairExists(token) {
   }
 }
 
-// Créer une VM
-router.post("/create-vm", async (req, res) => {
+
+// Create a VM
+router.post("/create-vm",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
   try {
     const { flavorRef, name } = req.body;
-    const token = await getAuthToken();
-    await ensureKeypairExists(token);
+    const token = await getAuthToken(projectId);
+    await ensureKeypairExists(token,projectId);
 
     const serverPayload = {
       server: {
-        name: name || "myVM", // Use the name from the request or default to "myVM"
+        name: `${name || "myVM"}-${projectId}`, // Use the name from the request or default to "myVM"
         imageRef: "8e0a53a0-f84b-4e0f-b0f5-89b8414fc468", // Replace with your image ID
         flavorRef: flavorRef, // Use the flavorRef from the request
         networks: [{ uuid: "6bbb744b-3f6e-4baa-947e-0964f6aa6fd1" }], // Replace with your network ID
@@ -107,10 +118,11 @@ router.post("/create-vm", async (req, res) => {
   }
 });
 
-// Redémarrer une VM
-router.post("/reboot-vm/:id", async (req, res) => {
+// Reboot a VM
+router.post("/reboot-vm/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
     const { type } = req.body;
 
@@ -126,26 +138,27 @@ router.post("/reboot-vm/:id", async (req, res) => {
   }
 });
 
-// Modifier une VM (changer RAM, CPU et Disque)
-router.put("/resize-vm/:id", async (req, res) => {
+// Resize VM (Change RAM, CPU and Disk)
+router.put("/resize-vm/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
     const { ram, vcpus, disk } = req.body;
 
-    // Vérifier si les valeurs sont valides
+    // Check if parameters are good for available flavors
     if (!ram || !vcpus || !disk) {
       return res.status(400).json({ message: "RAM, CPU et disque sont obligatoires." });
     }
 
-    // Obtenir la liste des flavors pour trouver celui correspondant
+    // Get list of flavors
     const flavorsResponse = await axios.get(`${OS_NOVA_URL}/flavors/detail`, {
       headers: { "X-Auth-Token": token },
     });
 
     const flavors = flavorsResponse.data.flavors;
 
-    // Rechercher un flavor correspondant aux nouvelles spécifications
+    // Check if there is nay flavor linked to request flavor parameters
     const matchingFlavor = flavors.find(f => 
       f.ram === parseInt(ram) && f.vcpus === parseInt(vcpus) && f.disk === parseInt(disk)
     );
@@ -154,7 +167,7 @@ router.put("/resize-vm/:id", async (req, res) => {
       return res.status(404).json({ message: "Aucun flavor ne correspond aux spécifications fournies." });
     }
 
-    // Modifier la VM en appliquant le nouveau flavor
+    // Change the CM with that new flavor
     await axios.post(
       `${OS_NOVA_URL}/servers/${id}/action`,
       { resize: { flavorRef: matchingFlavor.id } },
@@ -168,10 +181,12 @@ router.put("/resize-vm/:id", async (req, res) => {
 });
 
 
-// **Supprimer une VM
-router.delete("/delete-vm/:id", async (req, res) => {
+// Delete a VM
+router.delete("/delete-vm/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
 
     await axios.delete(`${OS_NOVA_URL}/servers/${id}`, {
@@ -184,10 +199,12 @@ router.delete("/delete-vm/:id", async (req, res) => {
   }
 });
 
-// Démarrer une VM
-router.post("/start-vm/:id", async (req, res) => {
+// Run a VM
+router.post("/start-vm/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
 
     await axios.post(
@@ -202,10 +219,12 @@ router.post("/start-vm/:id", async (req, res) => {
   }
 });
 
-// Arrêter une VM
-router.post("/stop-vm/:id", async (req, res) => {
+// Stop the VM
+router.post("/stop-vm/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
 
     await axios.post(
@@ -220,10 +239,13 @@ router.post("/stop-vm/:id", async (req, res) => {
   }
 });
 
-// Lister toutes les VMs du projet
-router.get("/list-vms", async (req, res) => {
+// List all VM of the project
+router.get("/list-vms",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+  console.log(projectId);
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
 
     const response = await axios.get(`${OS_NOVA_URL}/servers/detail`, {
       headers: { "X-Auth-Token": token },
@@ -236,9 +258,11 @@ router.get("/list-vms", async (req, res) => {
 });
 
 // Get all flavors
-router.get("/flavors", async (req, res) => {
+router.get("/flavors",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
 
     const response = await axios.get(`${OS_NOVA_URL}/flavors/detail`, {
       headers: { "X-Auth-Token": token },
@@ -250,10 +274,12 @@ router.get("/flavors", async (req, res) => {
   }
 });
 
-// Confirmer le redimensionnement
-router.post("/confirm-resize/:id", async (req, res) => {
+// Confirm resizing 
+router.post("/confirm-resize/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
 
     await axios.post(
@@ -268,10 +294,12 @@ router.post("/confirm-resize/:id", async (req, res) => {
   }
 });
 
-// Annuler le redimensionnement
-router.post("/revert-resize/:id", async (req, res) => {
+// Canceled resizing
+router.post("/revert-resize/:id",authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
+
   try {
-    const token = await getAuthToken();
+    const token = await getAuthToken(projectId);
     const { id } = req.params;
 
     await axios.post(
@@ -287,60 +315,30 @@ router.post("/revert-resize/:id", async (req, res) => {
 });
 
 
+router.get('/servers/:vmId',authenticateJWT, async (req, res) => {
+  const projectId = req.user.project_id;
 
-
-
-
-
-
-
-
-// Get all instances in a project
-router.get("/instances", async (req, res) => {
   try {
-    const { projectId } = req.query;
-    const token = await getAuthToken(OS_USERNAME, OS_PASSWORD, projectId);
+    const token = await getAuthToken(projectId);
 
-    const response = await axios.get(`${OS_NOVA_URL}/servers/detail`, {
-      headers: { "X-Auth-Token": token }
-    });
+    if (!token) {
+      return res.status(401).json({ error: 'Token missing' });
+    }
 
-    res.json({ instances: response.data.servers });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching instances", error: error.message });
-  }
-});
-
-// Get specific instance details with metrics
-router.get("/instance/:id", async (req, res) => {
-  try {
-    const { projectId } = req.query;
-    const { id } = req.params;
-    const token = await getAuthToken(OS_USERNAME, OS_PASSWORD, projectId);
-
-    // Get basic instance details
-    const instanceRes = await axios.get(`${OS_NOVA_URL}/servers/${id}`, {
-      headers: { "X-Auth-Token": token }
-    });
-
-    // Get metrics (requires OpenStack Telemetry - ceilometer/gnocchi)
-    const metricsRes = await axios.get(
-      `http://156.18.114.237:8777/v2/meters/(cpu_util|memory.usage|disk.usage)/statistics`,
-      {
-        headers: { "X-Auth-Token": token },
-        params: {
-          q: [{ field: "resource_id", op: "eq", value: id }],
-          period: 3600 // 1 hour window
-        }
+    const vmId = req.params.vmId;
+    
+    // Request VM details from the Nova API
+    const response = await axios.get(`${OS_NOVA_URL}/servers/${vmId}`, {
+      headers: {
+        "X-Auth-Token": token,
+        "Content-Type": "application/json"
       }
-    );
-
-    res.json({
-      instance: instanceRes.data.server,
-      metrics: metricsRes.data
     });
+    
+    res.json(response.data);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching instance details", error: error.message });
+    console.error('Error fetching VM details:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({ error: error.response?.data || error.message });
   }
 });
 

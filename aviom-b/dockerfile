@@ -1,18 +1,20 @@
-# Utilisation de Node.js
+# Utilisation de l'image Node.js officielle version 18
 FROM node:18
 
-# Définir le répertoire de travail
-WORKDIR /
+# Définir un répertoire de travail 
+WORKDIR /app
 
-# Copier les fichiers
+# Copier uniquement les fichiers de dépendances pour optimiser le cache
 COPY package.json package-lock.json ./
+
+# Installer les dépendances
 RUN npm install
 
-# Copier le reste des fichiers
+# Copier tout le code source dans le conteneur
 COPY . .
 
-# Exposer le port
+# Exposer le port sur lequel l'application écoute (5000)
 EXPOSE 5000
 
-# Démarrer le serveur
+# Démarrer le serveur (en mode développement)
 CMD ["npm", "run", "dev"]

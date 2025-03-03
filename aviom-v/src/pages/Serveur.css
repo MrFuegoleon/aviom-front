@@ -1,105 +1,74 @@
+/* serveur.css */
+
+/* Container styling */
 .serveur-container {
-  width: 90%;
-  margin: auto;
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
+  width: 100%;
+  margin: 0 auto;
   padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 
+/* Header */
 .serveur-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #e8eefc;
-  padding: 10px;
-  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.serveur-header {
+  display: flex;
+  justify-content: center; /* Center the actions container */
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .actions {
   display: flex;
-  gap: 10px;
+  width: 100%;
+  gap: 10px; /* Optional gap between buttons */
 }
 
-.create-button {
-  background-color: #0078d7;
-  color: white;
+.actions > button {
+  flex: 1; /* Each button takes equal space (half the width if there are 2) */
+  padding: 10px 20px;
+  background-color: #007bff;
   border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.create-button:hover {
-  background-color: #005fa3;
+
+.create-button:hover,
+.action-button:hover,
+.filter-button:hover {
+  background-color: #0056b3;
 }
 
-.form-container {
-  background-color: #ffffff;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h3 {
-  color: #00447a;
-}
-
-.configurations {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.config-classique, .config-vm, .config-flex {
-  width: 30%;
-}
-
-button {
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #005fa3;
-}
-
-.summary {
-  margin-top: 20px;
-}
-
-.submit-button {
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #005fa3;
-}
-
+/* Server Table */
 .serveur-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  background: #fff;
+  margin-bottom: 20px;
 }
 
-.serveur-table th, .serveur-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+.serveur-table th,
+.serveur-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
   text-align: left;
 }
 
+.serveur-table th {
+  background-color: #f9fafb;
+}
+
+/* Dummy Icon Styles */
 .status-green {
   display: inline-block;
   width: 10px;
@@ -107,499 +76,329 @@ button:hover {
   background-color: green;
   border-radius: 50%;
 }
-.back-button {
-  background-color: #f1f1f1;
-  color: #0078d7;
-  border: 1px solid #0078d7;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-  font-size: 16px;
+
+.backup-icon,
+.os-icon,
+.data-center-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
 }
 
-.back-button:hover {
-  background-color: #0078d7;
-  color: white;
-}
-.serveur-container {
-  width: 90%;
-  margin: auto;
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
-  padding: 20px;
-}
-
-.serveur-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #e8eefc;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
-.create-button {
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.create-button:hover {
-  background-color: #005fa3;
-}
-
-.offer-buttons {
-  margin-top: 20px;
-}
-
-.offer-button {
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.offer-button:hover {
-  background-color: #005fa3;
-}
-
-.config-details {
-  margin-top: 30px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.config-table {
+/* Packs Table */
+.packs-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.config-table th, .config-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  text-align: left;
-}
-
-button {
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #005fa3;
-}
-.config-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.config-table th, .config-table td {
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-  font-size: 14px;
-}
-
-.config-table th {
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-.config-table td:first-child {
-  font-weight: bold;
-}
-
-.config-table .eco {
-  background-color: #9CFF8C;
-  color: green;
-}
-
-.config-table .duo {
-  background-color: #91C7FF;
-  color: blue;
-}
-
-.config-table .trio {
-  background-color: #FF5C5C;
-  color: red;
-}
-
-.config-table .pro {
-  background-color: #D3D3D3;
-  color: gray;
-}
-
-.config-table .checkmark {
-  color: green;
-}
-
-.config-table .crossmark {
-  color: red;
-}
-
-.config-table .checkmark::before {
-  content: "✔️";
-}
-
-.config-table .crossmark::before {
-  content: "❌";
-}
-
-.config-details {
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  max-width: 80%;
-  margin: 0 auto;
-}
-
-.config-table td {
-  font-size: 14px;
-  color: #333;
-}
-
-.config-table td .checkmark, .config-table td .crossmark {
-  font-size: 18px;
-}
-/* Style pour les colonnes */
-.service-table th.eco {
-  background-color: #e0f8e0;
-  color: #008000;
-}
-
-.service-table th.duo {
-  background-color: #cce0ff;
-  color: #0000ff;
-}
-
-.service-table th.trio {
-  background-color: #f8d7da;
-  color: #ff0000;
-}
-
-.service-table th.pro {
-  background-color: #f5f5f5;
-  color: #808080;
-}
-
-/* Alignement des boutons */
-.discover-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.discover {
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.eco { background-color: #008000; color: black; }
-.duo { background-color: #0000ff; color: black; }
-.trio { background-color: #ff0000;color: black; }
-.pro { background-color: #808080; color: black;}
-
-/* Résumé de la configuration */
-.config-summary {
-  margin-top: 30px;
-  font-size: 18px;
-}
-
-.order-button {
-  padding: 10px;
-  background-color: #008000;
-  color: black;
-  border: none;
-  cursor: pointer;
-}
-/* Rendre le texte noir */
-.service-table, .service-table td, .service-table th {
-  color: black;
-}
-/* Container des boutons */
-.create-buttons-container {
-  display: flex;
-  justify-content: space-between;  /* Espacement uniforme entre les boutons */
-  align-items: center;  /* Centrer verticalement les boutons */
   margin-bottom: 20px;
-  margin-top: 20px;
+  background: #fff;
 }
 
-/* Conteneur du bouton */
-.create-btn {
-  position: absolute;
-  padding: 10px 20px;
-  font-size: 14px;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100px;
+.packs-table th,
+.packs-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
 }
 
-/* Exemple pour positionner le premier bouton à 50px du haut et 100px de la gauche */
-.create-btn.eco {
-  background-color: #28a745;
-  top: 815px;
-  left: 950px;
-  color: black;
-}
-
-/* Ajouter un autre bouton à une autre position */
-.create-btn.duo {
+.select-button {
+  padding: 5px 10px;
   background-color: #007bff;
-  top: 815px;  /* Positionner à 120px du haut */
-  left: 1150px; /* Positionner à 250px de la gauche */
-  color: black;
-}
-
-
-.create-btn.trio {
-  background-color: #ff0000; /* Couleur TRIO */
-  color: black;
-  top: 815px;  /* Positionner à 120px du haut */
-  left: 1330px; /* Positionner à 250px de la gauche */
-}
-
-.create-btn.pro {
-  background-color: #808080; /* Couleur PRO */
-  color: black;
-  top: 815px;  /* Positionner à 120px du haut */
-  left: 1530px; /* Positionner à 250px de la gauche */
-}
-
-/* Aligner les colonnes avec les boutons Créer */
-.service-table td {
-  text-align: center;
-  padding: 10px;
-}
-
-.service-table th {
-  text-align: center;
-  padding: 10px;
-}
-
-.config-table td, .config-table th {
-  padding: 10px;
-  text-align: center;
-}
-/* Résumé amélioré */
-.summary-container {
-  position: fixed;
-  right: 30px;
-  top: 100px;
-  width: 380px;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease-in-out;
-  z-index: 1000;
-  border-left: 6px solid #289bb0;
-}
-
-/* En-tête du résumé */
-.summary-header {
-  background: linear-gradient(90deg, #34bede, #289bb0);
-  color: white;
-  text-align: center;
-  padding: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 8px 8px 0 0;
-}
-
-/* Contenu du résumé */
-.summary-content {
-  padding: 15px;
-  color: #444;
-  font-size: 14px;
-}
-
-.summary-content p {
-  margin: 10px 0;
-  padding: 5px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Liste des caractéristiques */
-.summary-content ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.summary-content ul li {
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-}
-
-/* Bouton de validation */
-.submit-button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #34bede, #289bb0);
   border: none;
-  color: white;
-  font-size: 16px;
+  color: #fff;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 8px;
-  font-weight: bold;
-  text-transform: uppercase;
-  transition: all 0.3s ease-in-out;
-  margin-top: 15px;
+  transition: background-color 0.3s;
 }
 
-.submit-button:hover {
-  background: linear-gradient(90deg, #289bb0, #207a9a);
-  transform: translateY(-3px);
-}
-/* Correction pour éviter le chevauchement */
-.summary-box {
-  position: absolute;
-  right: 10px;
-  top: 700px;
-  width: 350px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  text-align: left;
-  transition: all 0.3s ease-in-out;
-  z-index: 1000;
-  border-left: 6px solid #289bb0;
-}
-
-/* Ajustement pour placer le résumé sous le tableau si l'écran est trop petit */
-@media screen and (max-width: 1400px) {
-  .summary-box {
-    position: relative;
-    right: 0;
-    margin-top: 20px;
-  }
-}
-.config-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  width: 100%;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-/* Conteneur principal */
-.register-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  background-color: #f8f9fa;
-  padding: 20px;
-}
-
-/* Boîte du formulaire */
-.register-box {
-  width: 100%;
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Titre du formulaire */
-.register-box h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Style des champs de saisie */
-.register-box input,
-.register-box select,
-.register-box textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-/* Style du textarea */
-.register-box textarea {
-  height: 100px;
-  resize: none;
-}
-
-/* Conteneur des colonnes */
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-/* Chaque colonne prend la moitié de la largeur */
-.column {
-  width: 48%;
-}
-
-/* Boutons */
-.register-box button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background 0.3s;
-}
-
-.register-box button:hover {
+.select-button:hover {
   background-color: #0056b3;
 }
 
-/* Bouton Retour */
-.register-box button[type="button"] {
-  background-color: #dc3545;
+/* Register Form */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-.register-box button[type="button"]:hover {
-  background-color: #b02a37;
+.register-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-column label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-column input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.register-box input[type="text"],
+.register-box input[type="email"],
+.register-box input[type="tel"],
+.register-box select,
+.register-box textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Form buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.confirm-button,
+.back-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-button {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.back-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.confirm-button:hover {
+  background-color: #218838;
+}
+
+.back-button:hover {
+  background-color: #c82333;
+}
+
+/* Configuration Form */
+.form-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.server-name-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.server-name-label input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.configurations {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.config-option {
+  flex: 1;
+}
+
+.config-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.config-button.active,
+.config-button:hover {
+  background-color: #0056b3;
+}
+
+.services-container {
+  margin-top: 20px;
+}
+
+.config-details {
+  margin-top: 20px;
+}
+
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.config-table th,
+.config-table td {
+  padding: 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.config-table th {
+  background: #f9fafb;
+}
+
+/* Create Buttons in Configuration */
+.create-buttons-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.create-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-btn.eco {
+  background-color: #28a745;
+}
+
+.create-btn.duo {
+  background-color: #007bff;
+}
+
+.create-btn.trio {
+  background-color: #fd7e14;
+}
+
+.create-btn.pro {
+  background-color: #6f42c1;
+}
+
+.create-btn:hover {
+  opacity: 0.8;
+}
+
+/* Offer Summary */
+.offer-summary {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.summary-header {
+  padding: 10px;
+  color: #fff;
+  text-align: center;
+}
+
+.summary-content {
+  padding: 20px;
+}
+
+.summary-content p {
+  margin-bottom: 10px;
+}
+
+.summary-content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.summary-content li {
+  margin-bottom: 5px;
+}
+
+.submit-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Flex Price Section */
+.flex-price-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.order-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.order-button:hover {
+  background-color: #0056b3;
+}
+
+/* Flex Recommendation */
+#flex-recommendation {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 5px;
+  }
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ProtectedPage from '../protectedPage';
+import LogoutButton from "../logout";
 import '../../App.css';
 
 // Icônes SVG pour chaque lien (vous pouvez les remplacer par vos propres icônes)
@@ -72,7 +74,7 @@ const Sidebar = () => {
       <nav className="nav-menu">
         <ul>
           <li>
-            <Link to="/">
+            <Link to="/dashboard">
               <HomeIcon />
               <span>Accueil</span>
             </Link>
@@ -83,12 +85,7 @@ const Sidebar = () => {
               <span>Gérer mes Serveurs</span>
             </Link>
           </li>
-          <li>
-            <Link to="/dashboard">
-              <DashboardIcon />
-              <span>Tableau de bord</span>
-            </Link>
-          </li>
+
           <li>
             <Link to="/commande">
               <DomainIcon />
@@ -115,7 +112,7 @@ const Sidebar = () => {
           </li>
         </ul>
       </nav>
-      <button className="subscribe-btn">Inscription Newsletter</button>
+      <LogoutButton/>
     </aside>
   );
 };
