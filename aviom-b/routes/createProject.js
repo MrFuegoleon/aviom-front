@@ -2,19 +2,8 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 require("dotenv").config();
-const { findUserByUsername, pool } = require("../db");
+const { pool } = require("../db");
 const authenticateJWT = require("../middlewares/authenticateJWT");
-
-const OS_IDENTITY_URL = process.env.OS_IDENTITY_URL;
-const OS_USERNAME = process.env.OS_USERNAME;
-const OS_PASSWORD = process.env.OS_PASSWORD;
-const OS_DOMAIN_ID = process.env.OS_DOMAIN_ID;
-const OS_NOVA_URL = process.env.OS_NOVA_URL;
-const KEYPAIR_NAME = process.env.KEYPAIR_NAME;
-const KEYPAIR_FILE = process.env.KEYPAIR_FILE;
-
-const OS_PROJECT_ID =
-  process.env.OS_PROJECT_ID || "88b62020c9c946f4ab54d8d48f1bb470";
 
 router.post("/create-project", authenticateJWT, async (req, res) => {
   const userId = req.user.id;
@@ -48,6 +37,7 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
       authPayload,
       { headers: { "Content-Type": "application/json" } }
     );
+
     const keystoneToken = authResponse.headers["x-subject-token"];
     if (!keystoneToken) {
       return res.status(401).json({ error: "Failed to get Keystone token" });
@@ -78,8 +68,9 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
       return res.status(500).json({ error: "Project creation failed" });
     }
 
-    // Step 3: Assign the admin role to the user for the new project
-    // First, get the admin role ID
+    console.log(`✅ Project Created: ${projectId}`);
+
+    // Step 3: Get "Member" and "Admin" Role IDs
     const rolesResponse = await axios.get(
       `${process.env.OS_IDENTITY_URL}/roles`,
       {
@@ -90,19 +81,25 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
       }
     );
 
-    const adminRole = rolesResponse.data.roles.find(
-      (role) => role.name === "admin"
+    const memberRole = rolesResponse.data.roles.find(
+      (role) => role.name.toLowerCase() === "member"
     );
-    if (!adminRole) {
-      return res.status(500).json({ error: "Admin role not found" });
+
+    const adminRole = rolesResponse.data.roles.find(
+      (role) => role.name.toLowerCase() === "admin"
+    );
+
+    if (!memberRole || !adminRole) {
+      return res.status(500).json({ error: "Roles not found" });
     }
 
+    const memberRoleId = memberRole.id;
     const adminRoleId = adminRole.id;
+    console.log(`🎭 Found Roles -> Member: ${memberRoleId}, Admin: ${adminRoleId}`);
 
-    // Assign the admin role to the user for the new project
-    await axios.put(
-      `${process.env.OS_IDENTITY_URL}/projects/${projectId}/users/${OpenstackUserId}/roles/${adminRoleId}`,
-      null,
+    // Step 4: Fetch **ALL USERS** in OpenStack
+    const usersResponse = await axios.get(
+      `${process.env.OS_IDENTITY_URL}/users`,
       {
         headers: {
           "X-Auth-Token": keystoneToken,
@@ -111,12 +108,49 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
       }
     );
 
-    // Step 4: Update Nova quota set for the new project
+    const users = usersResponse.data.users;
+    console.log(`🔍 Total Users Fetched: ${users.length}`);
+
+    // Step 5: Assign "Member" and "Admin" Role to Each User
+    console.log(`🛠 Adding Users to Project: ${projectId}`);
+    for (const user of users) {
+      try {
+        // Assign Member Role
+        await axios.put(
+          `${process.env.OS_IDENTITY_URL}/projects/${projectId}/users/${user.id}/roles/${memberRoleId}`,
+          {},  // Send an empty JSON object instead of null
+          {
+            headers: {
+              "X-Auth-Token": keystoneToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(`✅ Added User ${user.name} as Member to Project ${projectId}`);
+
+        // Assign Admin Role
+        await axios.put(
+          `${process.env.OS_IDENTITY_URL}/projects/${projectId}/users/${user.id}/roles/${adminRoleId}`,
+          {},  // Send an empty JSON object instead of null
+          {
+            headers: {
+              "X-Auth-Token": keystoneToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(`✅ Added User ${user.name} as Admin to Project ${projectId}`);
+
+      } catch (error) {
+        console.error(`❌ Error adding user ${user.name}:`, error.response ? error.response.data : error.message);
+      }
+    }
+
+    // Step 6: Update Project Quotas in Nova
     const quotaPayload = {
       quota_set: {
-        ram: allocatedResources.ram, // in MB
-        cores: allocatedResources.vcpus, // number of vCPUs
-        // ephemeral: allocatedResources.disk // disk quota (optional)
+        ram: parseInt(allocatedResources.ram, 10),
+        cores: parseInt(allocatedResources.vcpus, 10),
       },
     };
 
@@ -131,7 +165,9 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
       }
     );
 
-    // Step 5: Update the user's record in the database
+    console.log("✅ Quotas Updated Successfully!");
+
+    // Step 7: Store Project ID in the Database
     let updateQuery = "";
     if (pack === "eco") {
       updateQuery = "UPDATE users SET eco = 1, project_id = ? WHERE id = ?";
@@ -147,19 +183,23 @@ router.post("/create-project", authenticateJWT, async (req, res) => {
     await pool.query(updateQuery, [projectId, userId]);
 
     res.status(201).json({
-      message: "Project created, resources allocated, and admin rights granted",
+      message: "✅ Project created, resources allocated, all users added as Members & Admins.",
       projectId,
     });
+
   } catch (error) {
     console.error(
-      "Error creating project:",
+      "❌ Error creating project:",
       error.response ? error.response.data : error.message
     );
     res.status(500).json({ error: "Failed to create project" });
   }
 });
 
-// This route requires authentication so that req.user.id is available (or you can send userId in the body)
+module.exports = router;
+
+
+
 router.post("/update-project", authenticateJWT, async (req, res) => {
   const userId = req.user.id;
 

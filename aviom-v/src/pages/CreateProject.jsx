@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import api from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ const CreateProject = () => {
   const [disk, setDisk] = useState("");
   const [pack, setPack] = useState("eco");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -23,39 +23,37 @@ const CreateProject = () => {
         allocatedResources: { ram, vcpus, disk },
         pack,
       };
-  
+
       // Check if the user already has a project_id by fetching the user profile.
       const userProfileResponse = await api.get("/api/auth");
       const userProjectId = userProfileResponse.data.project_id;
-  
-      let response;
+
       if (userProjectId) {
-        // Call the update route since a project already exists.
-        response = await api.post("/api/project/update-project",payload);
+        await api.post("/api/project/update-project", payload);
       } else {
-        // Call the create route because no project exists yet.
-        response = await api.post("/api/project/create-project", payload);
-        // Optionally, store the new projectId in local storage for future use.
-        localStorage.setItem("projectId", response.data.projectId);
+        await api.post("/api/project/create-project", payload);
       }
+
+      // Show confirmation pop-up
+      setShowModal(true);
       
-      setSuccess(`Project processed successfully! Project ID: ${response.data.projectId}`);
-      setError("");
-      navigate("/machine");
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Error processing project");
-      setSuccess("");
     }
   };
-  
-  
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token
+    localStorage.removeItem("projectId"); // Remove project ID if stored
+    navigate("/login"); // Redirect to login
+  };
 
   return (
     <div className="container mt-4">
       <h2>Create a New Project</h2>
       {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="projectName">
           <Form.Label>Project Name</Form.Label>
@@ -117,6 +115,22 @@ const CreateProject = () => {
           Create Project
         </Button>
       </Form>
+
+      {/* Confirmation Modal */}
+      <Modal show={showModal} onHide={handleLogout} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>Project Created Successfully</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your project has been successfully created. <br />
+          You need to log in again to apply changes.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleLogout}>
+            Log In Again
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -18,7 +18,7 @@ async function findUserByUsername(username) {
   ]);
   return rows[0];
 }
-
+/*
 const users = [
   {
     id: 1,
@@ -42,5 +42,5 @@ async function findUserByUsername(username) {
   // Simule une recherche dans une base de données en retournant la promesse résolue
   return users.find((u) => u.username === username);
 }
-
+*/
 module.exports = { findUserByUsername, pool };

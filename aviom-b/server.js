@@ -6,7 +6,6 @@ const session = require("express-session");
 require("dotenv").config();
 const bodyParser = require("body-parser");
 const passport = require("./passport-config");
-const authenticateJWT = require("./middlewares/authenticateJWT.js");
 
 const createProjectRoute = require("./routes/createProject");
 const openstackRoutes = require("./routes/openstack.js");
@@ -17,7 +16,9 @@ const sseRoutes = require("./routes/sse.js");
 const packsRoutes = require("./routes/packsRoutes");
 const vosFacturesRoutes = require("./routes/vosfactures");
 const machineRoutes = require("./routes/machine.js");
-const cancelSubscription = require("./routes/cancelSubscription");
+const cancelSubscriptionRoute = require("./routes/cancelSubscription");
+const summaryRoute = require("./routes/summary.js");
+
 
 const app = express();
 app.use(
@@ -47,8 +48,10 @@ app.use("/api/openstack", openstackRoutes);
 app.use("/api/gocardless", gocardlessRoutes);
 app.use("/api/paypal", paypalRoutes);
 app.use("/api/machine", machineRoutes);
-app.use("/api/cancel-subscription", cancelSubscription);
+app.use("/api/cancel-subscription", cancelSubscriptionRoute);
 app.use("/api/project", createProjectRoute);
+app.use("/api/summary", summaryRoute);
+
 
 app.post("/webhook/gocardless", async (req, res) => {
   try {

@@ -12,7 +12,7 @@ router.post("/login", (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) return next(err);
     if (!user) return res.status(401).json({ message: info.message });
-    const token = jwt.sign({ id: user.id, username: user.username, project_id: user.project_id }, JWT_SECRET, { expiresIn: '2min' });
+    const token = jwt.sign({ id: user.id, username: user.username, project_id: user.project_id }, JWT_SECRET, { expiresIn: '10min' });
     res.json({ token });
   })(req, res, next);
 });

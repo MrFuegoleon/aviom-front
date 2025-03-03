@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import api from "../axiosConfig";
 import "./serveur.css";
-
 const Serveur = () => {
   // State management
   // ---------------------------------------------
@@ -634,7 +633,6 @@ const Serveur = () => {
   // ---------------------------------------------
   return (
     <div className="serveur-container">
-      <Manage/>
       <header className="serveur-header">
         <div className="actions">
           <Button
