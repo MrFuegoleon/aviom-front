@@ -10,7 +10,6 @@ import Support from "./pages/support";
 import Informations from "./pages/informations";
 import ConfirmationPaiement from "./pages/ConfirmationPaiement";
 import OpenMachine from "./pages/Machine";
-import Manage from "./pages/doubleButton.jsx";
 import Sidebar from "./components/Sidebar/sidebar.jsx";
 import CreateProject from "./pages/CreateProject.jsx";
 import ProtectedPage from "./components/protectedPage.jsx";
@@ -102,17 +101,7 @@ function App() {
               </div>
             }
           />
-          <Route
-            path="/manage"
-            element={
-              <div className="app-container">
-                <Sidebar />
-                <main className="main-content">
-                  <Manage />
-                </main>
-              </div>
-            }
-          />
+        
           <Route
             path="/createProject"
             element={

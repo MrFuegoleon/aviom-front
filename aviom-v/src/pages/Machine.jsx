@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import api from '../axiosConfig';
 import { useNavigate } from "react-router-dom";
 import VmRow from '../components/VmRow'
+import Manage from '../components/doubleButton';
 const API_BASE = '/api/openstack';
 
 function OpenMachine() {
@@ -39,7 +40,7 @@ function OpenMachine() {
             "You don't have any pack. Would you like to go to the Services page to purchase one?"
           );
           if (shouldRedirect) {
-            navigate("/createProject");
+            navigate("/services");
           } else {
             navigate("/dashboard");
           }
@@ -48,8 +49,6 @@ function OpenMachine() {
       .catch(error => {
         console.error("Error fetching user profile:", error);
       });
-    fetchVms();
-    fetchFlavors();
   }, []);
 
   useEffect(() => {
@@ -154,6 +153,7 @@ function OpenMachine() {
   return (
     <div className="container mt-4">
       <h1 className="mb-4">OpenStack VM Management</h1>
+      <Manage/>
 
       {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 

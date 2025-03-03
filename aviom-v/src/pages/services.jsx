@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import PaymentOptions from "./PaymentOptions";
 import  "./serveur.css";
+import Manage from "../components/doubleButton";
 
 import ConfigurationModal from './ConfigurationModal';
 
@@ -643,6 +644,7 @@ const renderPacksTable = () => (
 
   return (
     <div className="serveur-container">
+      <Manage/>
       <header className="serveur-header">
         
         <div className="actions">
