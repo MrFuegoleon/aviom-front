@@ -9,28 +9,21 @@ import "./serveur.css";
 
 const Serveur = () => {
   // State management
-  // ---------------------------------------------
-  // 1) Set showForm = true to immediately display the configuration page.
-  // 2) Set selectedConfig = "classique" if you want the "Classique Configuration" displayed by default.
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const [serverName, setServerName] = useState("");
-  const [selectedConfig, setSelectedConfig] = useState("classique");
+  const [selectedConfig, setSelectedConfig] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
-
   const [packs, setPacks] = useState([]);
   const [showConfigModal, setShowConfigModal] = useState(false);
   const [configType, setConfigType] = useState("");
   const [flexPricing, setFlexPricing] = useState({});
-  const [flexConfig, setFlexConfig] = useState({ cpu: 4, ram: 4, hdd: 100, ip: 1 });
-
   const [userPacks, setUserPacks] = useState({ eco: 0, duo: 0, trio: 0, flex: 0 });
   const [hasPack, setHasPack] = useState(false);
-
+  
   const navigate = useNavigate();
 
   // Fetch packs data on component mount
-  // ---------------------------------------------
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/packs")
@@ -42,11 +35,8 @@ const Serveur = () => {
       });
   }, []);
 
-  // Fetch user profile data
-  // ---------------------------------------------
   useEffect(() => {
-    api
-      .get("/api/machine")
+    api.get("/api/machine")
       .then((response) => {
         const { eco, duo, trio, flex } = response.data;
         console.log("Response from /api/machine:", response.data);
@@ -59,7 +49,6 @@ const Serveur = () => {
   }, []);
 
   // Event handlers
-  // ---------------------------------------------
   const handleCreateClick = () => setShowForm(true);
   const handleBackClick = () => setShowForm(false);
   const handleNameChange = (event) => setServerName(event.target.value);
@@ -102,15 +91,13 @@ const Serveur = () => {
     setShowConfigModal(false);
   };
 
-  // Fetch Flex pricing
-  // ---------------------------------------------
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/Flex")
       .then((response) => {
         const pricingData = {};
         response.data.forEach((item) => {
-          pricingData[item.nom] = item.prix;
+          pricingData[item.nom] = item.prix; // Store pricing per resource type
         });
         setFlexPricing(pricingData);
       })
@@ -119,16 +106,16 @@ const Serveur = () => {
       });
   }, []);
 
-  // Update price whenever flexConfig changes
-  // ---------------------------------------------
-  useEffect(() => {
-    updatePrice();
-  }, [flexConfig]);
+  const [flexConfig, setFlexConfig] = useState({ cpu: 4, ram: 4, hdd: 100, ip: 1 });
 
   const handleFlexChange = (e, type) => {
     let newValue = e.target.value.trim() === "" ? 0 : parseInt(e.target.value);
     setFlexConfig((prev) => ({ ...prev, [type]: newValue }));
   };
+
+  useEffect(() => {
+    updatePrice();
+  }, [flexConfig]);
 
   const updatePrice = () => {
     if (Object.keys(flexPricing).length === 0) return;
@@ -144,18 +131,10 @@ const Serveur = () => {
       ((flexConfig.hdd || 0) / 100) * hddPrice +
       (flexConfig.ip || 0) * ipPrice;
 
-    const flexPriceElement = document.getElementById("flex-price");
-    const flexRecElement = document.getElementById("flex-recommendation");
-    if (flexPriceElement) {
-      flexPriceElement.textContent = `${total.toFixed(2)}€/mois`;
-    }
-    if (flexRecElement) {
-      flexRecElement.innerHTML = recommendPack();
-    }
+    document.getElementById("flex-price").textContent = `${total.toFixed(2)}€/mois`;
+    document.getElementById("flex-recommendation").innerHTML = recommendPack();
   };
 
-  // Helper functions
-  // ---------------------------------------------
   const recommendPack = () => {
     if (packs.length === 0 || Object.keys(flexPricing).length === 0) return null;
 
@@ -190,15 +169,16 @@ const Serveur = () => {
     );
 
     return `
-      <div>
-        💡 Nous vous recommandons le pack <strong>${bestPack.pack.nom}</strong> (${bestPack.packTotalPrice.toFixed(
-          2
-        )}€/mois).
-        <br>
-      </div>
+        <div>
+            💡 Nous vous recommandons le pack <strong>${bestPack.pack.nom}</strong> (${bestPack.packTotalPrice.toFixed(
+      2
+    )}€/mois).
+            <br>
+        </div>
     `;
   };
 
+  // Helper function to get color based on config type
   const getColorForConfig = (type) => {
     switch (type) {
       case "eco":
@@ -219,10 +199,40 @@ const Serveur = () => {
     console.log("Form Submitted");
   };
 
-  // Renders
-  // ---------------------------------------------
-  // We don't render a "server table" anymore; 
-  // we only show the configuration form or the billing form.
+  const renderPacksTable = () => (
+    <table className="packs-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom</th>
+          <th>CPU (coeurs)</th>
+          <th>RAM (Go)</th>
+          <th>HDD (To)</th>
+          <th>Adresse IP</th>
+          <th>Prix (€)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {packs.map((pack) => (
+          <tr key={pack.id}>
+            <td>{pack.id}</td>
+            <td>{pack.nom}</td>
+            <td>{pack.cpu}</td>
+            <td>{pack.ram}</td>
+            <td>{pack.hdd}</td>
+            <td>{pack.Adresse_IP}</td>
+            <td>{pack.tarif}</td>
+            <td>
+              <button className="select-button" onClick={() => handleCreateButtonClick(pack.id)}>
+                Sélectionner
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 
   const renderBillingForm = () => (
     <div className="register-container">
@@ -259,11 +269,7 @@ const Serveur = () => {
           </select>
           <label>Adresse *</label>
           <input type="text" name="address" required />
-          <input
-            type="text"
-            name="apartment"
-            placeholder="Appartement, bureau, etc. (optionnel)"
-          />
+          <input type="text" name="apartment" placeholder="Appartement, bureau, etc. (optionnel)" />
           <label>Ville *</label>
           <input type="text" name="city" required />
           <label>Code postal *</label>
@@ -276,11 +282,7 @@ const Serveur = () => {
             <button type="submit" className="confirm-button">
               Confirmer
             </button>
-            <button
-              type="button"
-              className="back-button"
-              onClick={() => setShowRegisterForm(false)}
-            >
+            <button type="button" className="back-button" onClick={() => setShowRegisterForm(false)}>
               Retour
             </button>
           </div>
@@ -289,7 +291,6 @@ const Serveur = () => {
     </div>
   );
 
-  // This is the main configuration form you want to see immediately on navigation
   const renderConfigurationForm = () => (
     <div className="form-container">
       <h3>Créer un serveur Cloud</h3>
@@ -329,9 +330,7 @@ const Serveur = () => {
           </button>
         </div>
       </div>
-
       <div className="services-container">
-        {/* Classique */}
         {selectedConfig === "classique" && (
           <div className="config-details">
             <h5>Classique Configuration</h5>
@@ -427,90 +426,7 @@ const Serveur = () => {
             </div>
           </div>
         )}
-
-        {/* Ajout des VM */}
-        {selectedConfig === "ajout-vm" && (
-          <div className="config-details">
-            <h5>Flex - Configuration</h5>
-            <table className="config-table">
-              <thead>
-                <tr>
-                  <th>Critère</th>
-                  <th>Valeur</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>CPU</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="1"
-                      max="192"
-                      value={flexConfig.cpu}
-                      step="1"
-                      onChange={(e) => handleFlexChange(e, "cpu")}
-                    />
-                    <span>vCores</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RAM</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="1"
-                      max="3000"
-                      value={flexConfig.ram}
-                      step="1"
-                      onChange={(e) => handleFlexChange(e, "ram")}
-                    />
-                    <span>Go</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>HDD</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="100"
-                      max="47000"
-                      value={flexConfig.hdd}
-                      step="100"
-                      onChange={(e) => handleFlexChange(e, "hdd")}
-                    />
-                    <span>Go</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Adresse IP</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="1"
-                      max="128"
-                      value={flexConfig.ip}
-                      step="1"
-                      onChange={(e) => handleFlexChange(e, "ip")}
-                    />
-                    <span>Adresse(s) IP</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div className="flex-price-container">
-              <h4>
-                Prix Total : <span id="flex-price">0€/mois</span>
-              </h4>
-              <button className="order-button" onClick={handleCreateButtonClick}>
-                Commander
-              </button>
-            </div>
-            <div id="flex-recommendation"></div>
-          </div>
-        )}
-
-        {/* Flex */}
+        {selectedConfig === "ajout-vm" && renderPacksTable()}
         {selectedConfig === "flex" && (
           <div className="config-details">
             <h5>Flex - Configuration</h5>
@@ -593,7 +509,6 @@ const Serveur = () => {
         )}
       </div>
 
-      {/* If an offer is selected for "classique" */}
       {selectedConfig === "classique" && selectedOffer && (
         <div className="offer-summary">
           <div className="summary-header">
@@ -626,15 +541,56 @@ const Serveur = () => {
           </div>
         </div>
       )}
+      
+      <button className="back-button" onClick={handleBackClick}>
+        Retour
+      </button>
     </div>
   );
 
-  // ---------------------------------------------
-  // FINAL RETURN
-  // ---------------------------------------------
+  const renderServerTable = () => (
+    <>
+      <table className="serveur-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>État</th>
+            <th>Sauvegarde</th>
+            <th>IP</th>
+            <th>Type</th>
+            <th>SE</th>
+            <th>Avertissements</th>
+            <th>Centre de calcul</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input type="radio" /> Cloud Server 0
+            </td>
+            <td>
+              <span className="status-green"></span>
+            </td>
+            <td>
+              <span className="backup-icon"></span>
+            </td>
+            <td>XXX.XXX.XXX.XXX</td>
+            <td>S</td>
+            <td>
+              <span className="os-icon"></span> Ubuntu 22.04
+            </td>
+            <td>--</td>
+            <td>
+              <span className="data-center-icon"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  );
+
   return (
     <div className="serveur-container">
-      <Manage/>
       <header className="serveur-header">
         <div className="actions">
           <Button
@@ -651,17 +607,16 @@ const Serveur = () => {
             onClick={() => navigate("/machine")}
             disabled={!hasPack}
           >
-            Gerer vos machines
+          Gerer vos machines
           </Button>
         </div>
       </header>
 
       {showRegisterForm
         ? renderBillingForm()
-        :
-          showForm
-          ? renderConfigurationForm()
-          : null}
+        : showForm
+        ? renderConfigurationForm()
+        : renderServerTable()}
 
       {showConfigModal && (
         <ConfigurationModal

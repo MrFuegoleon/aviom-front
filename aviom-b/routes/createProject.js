@@ -1,8 +1,8 @@
-const express = require('express');
-const axios = require('axios');
+const express = require("express");
+const axios = require("axios");
 const router = express.Router();
-require('dotenv').config();
-const { findUserByUsername, pool } = require('../db');
+require("dotenv").config();
+const { findUserByUsername, pool } = require("../db");
 const authenticateJWT = require("../middlewares/authenticateJWT");
 
 const OS_IDENTITY_URL = process.env.OS_IDENTITY_URL;
@@ -13,9 +13,10 @@ const OS_NOVA_URL = process.env.OS_NOVA_URL;
 const KEYPAIR_NAME = process.env.KEYPAIR_NAME;
 const KEYPAIR_FILE = process.env.KEYPAIR_FILE;
 
-const OS_PROJECT_ID = process.env.OS_PROJECT_ID || "88b62020c9c946f4ab54d8d48f1bb470";
+const OS_PROJECT_ID =
+  process.env.OS_PROJECT_ID || "88b62020c9c946f4ab54d8d48f1bb470";
 
-router.post('/create-project', authenticateJWT, async (req, res) => {
+router.post("/create-project", authenticateJWT, async (req, res) => {
   const userId = req.user.id;
   const { name, description, allocatedResources, pack } = req.body;
 
@@ -89,7 +90,9 @@ router.post('/create-project', authenticateJWT, async (req, res) => {
       }
     );
 
-    const adminRole = rolesResponse.data.roles.find((role) => role.name === "admin");
+    const adminRole = rolesResponse.data.roles.find(
+      (role) => role.name === "admin"
+    );
     if (!adminRole) {
       return res.status(500).json({ error: "Admin role not found" });
     }
@@ -98,7 +101,7 @@ router.post('/create-project', authenticateJWT, async (req, res) => {
 
     // Assign the admin role to the user for the new project
     await axios.put(
-      `${process.env.OS_IDENTITY_URL}/projects/${projectId}/users/${userId}/roles/${adminRoleId}`,
+      `${process.env.OS_IDENTITY_URL}/projects/${projectId}/users/${OpenstackUserId}/roles/${adminRoleId}`,
       null,
       {
         headers: {
@@ -143,23 +146,34 @@ router.post('/create-project', authenticateJWT, async (req, res) => {
     }
     await pool.query(updateQuery, [projectId, userId]);
 
-    res.status(201).json({ message: "Project created, resources allocated, and admin rights granted", projectId });
+    res.status(201).json({
+      message: "Project created, resources allocated, and admin rights granted",
+      projectId,
+    });
   } catch (error) {
-    console.error("Error creating project:", error.response ? error.response.data : error.message);
+    console.error(
+      "Error creating project:",
+      error.response ? error.response.data : error.message
+    );
     res.status(500).json({ error: "Failed to create project" });
   }
 });
 
 // This route requires authentication so that req.user.id is available (or you can send userId in the body)
-router.post('/update-project',authenticateJWT, async (req, res) => {
+router.post("/update-project", authenticateJWT, async (req, res) => {
   const userId = req.user.id;
 
   const { allocatedResources, pack } = req.body;
   try {
     // Get the current project_id for this user from the database
-    const [rows] = await pool.query("SELECT project_id FROM users WHERE id = ?", [userId]);
+    const [rows] = await pool.query(
+      "SELECT project_id FROM users WHERE id = ?",
+      [userId]
+    );
     if (rows.length === 0 || !rows[0].project_id) {
-      return res.status(404).json({ error: "User does not have an existing project." });
+      return res
+        .status(404)
+        .json({ error: "User does not have an existing project." });
     }
     const projectId = rows[0].project_id;
 
@@ -178,7 +192,7 @@ router.post('/update-project',authenticateJWT, async (req, res) => {
         },
         scope: {
           project: {
-            id: projectId
+            id: projectId,
           },
         },
       },
@@ -197,10 +211,10 @@ router.post('/update-project',authenticateJWT, async (req, res) => {
     // Build the quota update payload with the allocated resources.
     const quotaPayload = {
       quota_set: {
-        ram: allocatedResources.ram,      // in MB
-        cores: allocatedResources.vcpus,    // number of vCPUs
-       // ephemeral: allocatedResources.disk       // disk quota (GB, ephemeral storage, etc.)
-      }
+        ram: allocatedResources.ram, // in MB
+        cores: allocatedResources.vcpus, // number of vCPUs
+        // ephemeral: allocatedResources.disk       // disk quota (GB, ephemeral storage, etc.)
+      },
     };
 
     // Update the quota set for the existing project in Nova.
@@ -231,12 +245,16 @@ router.post('/update-project',authenticateJWT, async (req, res) => {
     }
     await pool.query(updateQuery, [userId]);
 
-    res.status(200).json({ message: "Project updated and pack set accordingly", projectId });
+    res
+      .status(200)
+      .json({ message: "Project updated and pack set accordingly", projectId });
   } catch (error) {
-    console.error("Error updating project:", error.response ? error.response.data : error.message);
+    console.error(
+      "Error updating project:",
+      error.response ? error.response.data : error.message
+    );
     res.status(500).json({ error: "Failed to update project" });
   }
 });
-
 
 module.exports = router;
